@@ -297,7 +297,14 @@ let ytbPlayerReady = false;
 let ytbCurrentQueue = [];
 let ytbCurrentVideoId = null;
 
+let ytbInitialized = false;
+let initYouTubeRoomPlayer = () => {};
+
 if (roomId === 'general') {
+    initYouTubeRoomPlayer = function initYouTubeRoomPlayer() {
+        if (ytbInitialized) return;
+        ytbInitialized = true;
+
     const ytbTag = document.createElement('script');
     ytbTag.src = 'https://www.youtube.com/iframe_api';
     document.head.appendChild(ytbTag);
@@ -321,9 +328,8 @@ if (roomId === 'general') {
 
     const ytbBubble = document.createElement('button');
     ytbBubble.id = 'ytbBubble';
-    ytbBubble.style.cssText = 'position:fixed;left:16px;top:72px;z-index:500;width:48px;height:48px;background:#ff0000;color:white;border:none;border-radius:50%;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);font-size:22px;display:none;';
-    if (savedPos) { ytbBubble.style.left = savedPos.left; ytbBubble.style.top = savedPos.top; }
-    else { ytbBubble.style.left = '16px'; ytbBubble.style.top = '120px'; }
+    ytbBubble.setAttribute('aria-label', ytbLang().expand);
+    ytbBubble.style.cssText = 'position:fixed;left:1rem;top:13rem;z-index:500;width:48px;height:48px;min-width:48px;min-height:48px;padding:0;background:#ff0000;color:white;border:none;border-radius:50%;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.28);display:none;align-items:center;justify-content:center;line-height:1;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease;';
     document.body.appendChild(ytbBubble);
 
     function ytbSavePos(el) {
@@ -333,8 +339,10 @@ if (roomId === 'general') {
     function ytbSetCollapsed(collapsed) {
         localStorage.setItem('ytbCollapsed', collapsed ? '1' : '0');
         ytbWrap.style.display = collapsed ? 'none' : 'block';
-        ytbBubble.style.display = collapsed ? 'block' : 'none';
-        ytbBubble.style.transform = ytbWrap.style.transform || '';
+        ytbBubble.style.display = collapsed ? 'flex' : 'none';
+        ytbBubble.style.left = '1rem';
+        ytbBubble.style.top = '13rem';
+        ytbBubble.style.transform = '';
     }
 
     // Glisser-déposer (souris + tactile) sur un élément donné, applique la position à ytbWrap et ytbBubble
@@ -388,17 +396,16 @@ if (roomId === 'general') {
         ytbWrap.querySelector('#ytbSkipBtn').onclick = () => socket.emit('ytb-skip');
         ytbWrap.querySelector('#ytbMinBtn').onclick = () => ytbSetCollapsed(true);
         makeDraggable(ytbWrap.querySelector('#ytbHeader'));
-        ytbBubble.textContent = '▶';
+        ytbBubble.setAttribute('aria-label', t.expand);
+        ytbBubble.title = t.expand;
+        ytbBubble.innerHTML = '<span aria-hidden="true" style="display:block;width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid #fff;margin-left:4px;"></span>';
     }
     ytbRenderShell();
     ytbWrap.dataset.lang = localStorage.getItem('roomLang') || 'FR';
     ytbUpdateOverlay();
-    makeDraggable(ytbBubble);
-    ytbBubble.onclick = (e) => {
-        // Évite de ré-ouvrir juste après un drag (clic déclenché en fin de glisser)
-        if (ytbBubble._wasDragged) { ytbBubble._wasDragged = false; return; }
-        ytbSetCollapsed(false);
-    };
+    ytbBubble.onmouseenter = () => { ytbBubble.style.transform = 'scale(1.05)'; ytbBubble.style.boxShadow = '0 8px 22px rgba(0,0,0,.34)'; };
+    ytbBubble.onmouseleave = () => { ytbBubble.style.transform = ''; ytbBubble.style.boxShadow = '0 6px 18px rgba(0,0,0,.28)'; };
+    ytbBubble.onclick = () => ytbSetCollapsed(false);
     ytbSetCollapsed(savedCollapsed);
 
     function ytbRenderQueue() {
@@ -498,6 +505,7 @@ if (roomId === 'general') {
             ytbRenderQueue();
         }
     }, 1000);
+    };
 }
 
 // Re-auth as mod on reconnect
@@ -1559,6 +1567,7 @@ async function start(useVideo, useAudio) {
     conversationLayer.classList.remove('hidden');
     chatLayer.classList.remove('hidden');
     settingsLayer.classList.remove('hidden');
+    initYouTubeRoomPlayer();
 
     if (useVideo || useAudio) {
         try {
