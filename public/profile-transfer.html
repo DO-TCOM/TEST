@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile Transfer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <script>
+        // This page allows cross-origin localStorage access for profile transfer
+        // It will be loaded in an iframe from chaltet.com
+        
+        // Get profile from localStorage
+        const profile = {
+            pseudo: localStorage.getItem('displayName') || null,
+            color: localStorage.getItem('profileColor') || null
+        };
+        
+        // Send profile to parent window via postMessage
+        window.parent.postMessage({
+            type: 'profile-transfer',
+            profile: profile
+        }, '*');
+        
+        // Also store in sessionStorage for easier access
+        sessionStorage.setItem('transfer-profile', JSON.stringify(profile));
+    </script>
+</body>
+</html>

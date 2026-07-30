@@ -1,0 +1,27 @@
+{
+  "name": "chaltet",
+  "version": "1.0.0",
+  "description": "Chaltet video chat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@socket.io/redis-adapter": "^8.3.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.3.2",
+    "hark": "^1.2.3",
+    "helmet": "^8.1.0",
+    "nosleep.js": "^0.12.0",
+    "redis": "^5.11.0",
+    "socket.io": "^4.8.3",
+    "sql.js": "^1.14.1",
+    "webrtc-adapter": "^9.0.4"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

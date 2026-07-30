@@ -1,0 +1,2202 @@
+// Chatlet Mirror - Version Corrigée (Audit Complet + Replica 1:1 + Fixes)
+"use strict";
+
+// ── Avatars aléatoires ────────────────────────────────────────────────────────
+// Pokémon officiels (PokeAPI sprites)
+const SOUTHPARK_AVATARS = [
+  { img: "avatars/randy.png", bg: "#1565C0" },
+  { img: "avatars/kenny.png", bg: "#FF6D00" },
+  { img: "avatars/stan.png", bg: "#1565C0" },
+  { img: "avatars/cartman.png", bg: "#E53935" },
+  { img: "avatars/kyle.png", bg: "#2E7D32" },
+  { img: "avatars/butters.png", bg: "#FDD835" },
+  { img: "avatars/chef.png", bg: "#6D4C41" },
+  { img: "avatars/garrison.png", bg: "#7B1FA2" },
+  { img: "avatars/timmy.png", bg: "#0288D1" },
+];
+
+const SIMPSONS_AVATARS = [
+  { img: "avatars/homer.png", bg: "#FDD835" },
+  { img: "avatars/marge.png", bg: "#0288D1" },
+  { img: "avatars/bart.png", bg: "#FDD835" },
+  { img: "avatars/lisa.png", bg: "#FF8F00" },
+  { img: "avatars/maggie.png", bg: "#E91E63" },
+  { img: "avatars/burns.png", bg: "#546E7A" },
+  { img: "avatars/flanders.png", bg: "#2E7D32" },
+  { img: "avatars/krusty.png", bg: "#E53935" },
+  { img: "avatars/moe.png", bg: "#5D4037" },
+];
+
+const STARWARS2_AVATARS = [
+  { img: "avatars/vador.png", bg: "#212121" },
+  { img: "avatars/stormtrooper.png", bg: "#455A64" },
+  { img: "avatars/yoda.png", bg: "#2E7D32" },
+  { img: "avatars/luke.png", bg: "#1565C0" },
+  { img: "avatars/han.png", bg: "#5D4037" },
+  { img: "avatars/chewbacca.png", bg: "#6D4C41" },
+  { img: "avatars/leia.png", bg: "#ECEFF1" },
+  { img: "avatars/boba.png", bg: "#1B5E20" },
+  { img: "avatars/r2d2.png", bg: "#1565C0" },
+  { img: "avatars/c3po.png", bg: "#FF8F00" },
+];
+
+const MARVEL_AVATARS = [
+  { img: "avatars/spiderman.png", bg: "#B71C1C" },
+  { img: "avatars/ironman.png", bg: "#B71C1C" },
+  { img: "avatars/thor.png", bg: "#1565C0" },
+  { img: "avatars/hulk.png", bg: "#2E7D32" },
+  { img: "avatars/wolverine.png", bg: "#F57F17" },
+  { img: "avatars/deadpool.png", bg: "#C62828" },
+  { img: "avatars/panther.png", bg: "#212121" },
+  { img: "avatars/venom.png", bg: "#212121" },
+  { img: "avatars/captain.png", bg: "#1565C0" },
+  { img: "avatars/magneto.png", bg: "#7B1FA2" },
+];
+
+const SMASH_AVATARS = [
+  { img: "avatars/mario.png", bg: "#E53935" },
+  { img: "avatars/dk.png", bg: "#6D4C41" },
+  { img: "avatars/samus.png", bg: "#FF8F00" },
+  { img: "avatars/yoshi.png", bg: "#2E7D32" },
+  { img: "avatars/kirby.png", bg: "#E91E63" },
+  { img: "avatars/fox.png", bg: "#FF8F00" },
+  { img: "avatars/pikachu.png", bg: "#FDD835" },
+  { img: "avatars/luigi.png", bg: "#2E7D32" },
+  { img: "avatars/falcon.png", bg: "#E53935" },
+  { img: "avatars/skullkid.png", bg: "#4A148C" },
+];
+
+const ZELDA_AVATARS = [
+  { img: "avatars/link.png", bg: "#2E7D32" },
+  { img: "avatars/zelda.png", bg: "#F9A825" },
+  { img: "avatars/ganondorf.png", bg: "#4A148C" },
+  { img: "avatars/sheik.png", bg: "#37474F" },
+  { img: "avatars/impa.png", bg: "#1565C0" },
+  { img: "avatars/midna.png", bg: "#4A148C" },
+  { img: "avatars/tingle.png", bg: "#2E7D32" },
+  { img: "avatars/epona.png", bg: "#8D6E63" },
+];
+
+const DBZ_AVATARS = [
+  { img: "avatars/goku.png", bg: "#FF6D00" },
+  { img: "avatars/vegeta.png", bg: "#1A237E" },
+  { img: "avatars/piccolo.png", bg: "#2E7D32" },
+  { img: "avatars/gohan.png", bg: "#FF6D00" },
+  { img: "avatars/krillin.png", bg: "#FF8F00" },
+  { img: "avatars/freezer.png", bg: "#7B1FA2" },
+  { img: "avatars/cell.png", bg: "#1B5E20" },
+  { img: "avatars/buu.png", bg: "#E91E63" },
+  { img: "avatars/trunks.png", bg: "#7B1FA2" },
+];
+
+const NARUTO_AVATARS = [
+  { img: "avatars/naruto.png", bg: "#FF6D00" },
+  { img: "avatars/sasuke.png", bg: "#1A237E" },
+  { img: "avatars/sakura.png", bg: "#E91E63" },
+  { img: "avatars/kakashi.png", bg: "#546E7A" },
+  { img: "avatars/itachi.png", bg: "#212121" },
+  { img: "avatars/gaara.png", bg: "#827717" },
+  { img: "avatars/jiraiya.png", bg: "#E53935" },
+  { img: "avatars/tsunade.png", bg: "#2E7D32" },
+  { img: "avatars/orochimaru.png", bg: "#4A148C" },
+  { img: "avatars/naruto_team.png", bg: "#FF6D00" },
+];
+
+const OLIVE_AVATARS = [
+  { img: "avatars/tsubasa.png", bg: "#1565C0" },
+  { img: "avatars/hyuga.png", bg: "#B71C1C" },
+  { img: "avatars/misaki.png", bg: "#FF6D00" },
+  { img: "avatars/wakabayashi.png", bg: "#2E7D32" },
+  { img: "avatars/wakashimazu.png", bg: "#1565C0" },
+  { img: "avatars/misugi.png", bg: "#F9A825" },
+  { img: "avatars/matsuyama.png", bg: "#6D4C41" },
+  { img: "avatars/ishizaki.png", bg: "#FF8F00" },
+  { img: "avatars/roberto.png", bg: "#E53935" },
+];
+
+const ONEPIECE_AVATARS = [
+  { img: "avatars/luffy.png", bg: "#E53935" },
+  { img: "avatars/zoro.png", bg: "#2E7D32" },
+  { img: "avatars/nami.png", bg: "#FF8F00" },
+  { img: "avatars/usopp.png", bg: "#6D4C41" },
+  { img: "avatars/sanji.png", bg: "#1565C0" },
+  { img: "avatars/chopper.png", bg: "#E91E63" },
+  { img: "avatars/robin.png", bg: "#212121" },
+  { img: "avatars/franky.png", bg: "#1565C0" },
+  { img: "avatars/brook.png", bg: "#212121" },
+];
+
+const DC_AVATARS = [
+  { img: "avatars/batman.png", bg: "#212121" },
+  { img: "avatars/superman.png", bg: "#1565C0" },
+  { img: "avatars/wonderwoman.png", bg: "#B71C1C" },
+  { img: "avatars/flash.png", bg: "#E53935" },
+  { img: "avatars/aquaman.png", bg: "#006064" },
+  { img: "avatars/joker.png", bg: "#4A148C" },
+  { img: "avatars/harley.png", bg: "#E91E63" },
+  { img: "avatars/lantern.png", bg: "#2E7D32" },
+  { img: "avatars/cyborg.png", bg: "#546E7A" },
+  { img: "avatars/nightwing.png", bg: "#1A237E" },
+];
+
+
+const POKEMON_AVATARS = [
+  { img: "avatars/pokemon_1.png", bg: "#4CAF50" },
+  { img: "avatars/pokemon_3.png", bg: "#388E3C" },
+  { img: "avatars/pokemon_4.png", bg: "#FF5722" },
+  { img: "avatars/pokemon_6.png", bg: "#D32F2F" },
+  { img: "avatars/pokemon_7.png", bg: "#2196F3" },
+  { img: "avatars/pokemon_9.png", bg: "#1565C0" },
+  { img: "avatars/pokemon_25.png", bg: "#FFC107" },
+  { img: "avatars/pokemon_26.png", bg: "#FF8F00" },
+  { img: "avatars/pokemon_94.png", bg: "#6A1B9A" },
+  { img: "avatars/pokemon_131.png", bg: "#80CBC4" },
+  { img: "avatars/pokemon_133.png", bg: "#A5D6A7" },
+  { img: "avatars/pokemon_143.png", bg: "#6D4C41" },
+  { img: "avatars/pokemon_150.png", bg: "#7B1FA2" },
+  { img: "avatars/pokemon_151.png", bg: "#F48FB1" },
+  { img: "avatars/pokemon_249.png", bg: "#B2EBF2" },
+  { img: "avatars/pokemon_250.png", bg: "#FF8F00" },
+  { img: "avatars/pokemon_384.png", bg: "#388E3C" },
+  { img: "avatars/pokemon_448.png", bg: "#1565C0" },
+  { img: "avatars/pokemon_487.png", bg: "#4A148C" },
+  { img: "avatars/pokemon_491.png", bg: "#212121" },
+];
+
+// DiceBear avatars - Star Wars (robots/droids style)
+const STARWARS_AVATARS = [
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=darth-vader", bg: "#1a1a2e" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=r2d2", bg: "#1565C0" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=c3po", bg: "#FF8F00" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=bb8", bg: "#FF6D00" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=yoda", bg: "#2E7D32" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=grogu", bg: "#388E3C" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=mandalorian", bg: "#37474F" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=stormtrooper", bg: "#455A64" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=boba-fett", bg: "#1B5E20" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=darth-maul", bg: "#B71C1C" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=kylo-ren", bg: "#212121" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=rey", bg: "#795548" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=chewbacca", bg: "#5D4037" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=grievous", bg: "#546E7A" },
+  { img: "https://api.dicebear.com/9.x/bottts/svg?seed=ahsoka", bg: "#0288D1" },
+];
+
+// DiceBear - Fantasy (adventurer style)
+const FANTASY_AVATARS = [
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=dragon", bg: "#4a1942" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=wizard", bg: "#4527A0" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=elf", bg: "#2E7D32" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=dwarf", bg: "#5D4037" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=phoenix", bg: "#E65100" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=unicorn", bg: "#AD1457" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=vampire", bg: "#880E4F" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=werewolf", bg: "#37474F" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=sorcerer", bg: "#6A1B9A" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=paladin", bg: "#F57F17" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=rogue", bg: "#212121" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=ranger", bg: "#1B5E20" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=griffin", bg: "#BF360C" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=fairy", bg: "#7B1FA2" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=necromancer", bg: "#1A237E" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=golem", bg: "#546E7A" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=mermaid", bg: "#006064" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=orc", bg: "#33691E" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=bard", bg: "#880E4F" },
+  { img: "https://api.dicebear.com/9.x/adventurer/svg?seed=hydra", bg: "#1B5E20" },
+];
+
+// DiceBear - Disney/Animation (lorelei style)  
+const DISNEY_AVATARS = [
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=simba", bg: "#E65100" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=elsa", bg: "#0288D1" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=moana", bg: "#00838F" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=merida", bg: "#2E7D32" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=rapunzel", bg: "#F9A825" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=mulan", bg: "#C62828" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=ariel", bg: "#006064" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=belle", bg: "#F9A825" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=jasmine", bg: "#00695C" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=stitch", bg: "#1565C0" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=olaf", bg: "#E3F2FD" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=genie", bg: "#1565C0" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=hercules", bg: "#1976D2" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=tarzan", bg: "#2E7D32" },
+  { img: "https://api.dicebear.com/9.x/lorelei/svg?seed=aladdin", bg: "#7B1FA2" },
+];
+
+const AVATARS = [
+  ...POKEMON_AVATARS,
+  ...SOUTHPARK_AVATARS,
+  ...SIMPSONS_AVATARS,
+  ...STARWARS2_AVATARS,
+  ...MARVEL_AVATARS,
+  ...SMASH_AVATARS,
+  ...ZELDA_AVATARS,
+  ...DBZ_AVATARS,
+  ...NARUTO_AVATARS,
+  ...OLIVE_AVATARS,
+  ...ONEPIECE_AVATARS,
+  ...DC_AVATARS,
+  ...STARWARS_AVATARS,
+  ...FANTASY_AVATARS,
+  ...DISNEY_AVATARS,
+];
+
+const _avatarCache = {};
+function getAvatarForUser(userId) {
+    if (!_avatarCache[userId]) {
+        _avatarCache[userId] = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+    }
+    return _avatarCache[userId];
+}
+
+// Avatar local persistant dans localStorage
+let _localAvatar = null;
+function getLocalAvatar() {
+    if (_localAvatar) return _localAvatar;
+    const saved = localStorage.getItem('localAvatarIndex');
+    const idx = saved !== null ? parseInt(saved) : Math.floor(Math.random() * AVATARS.length);
+    if (saved === null) localStorage.setItem('localAvatarIndex', idx);
+    _localAvatar = AVATARS[idx];
+    return _localAvatar;
+}
+
+
+const socket = io();
+window.socket = socket;
+
+// Note: socket intentionally not exposed on window
+const roomId = window.location.pathname.split('/').pop() || 'friends';
+
+// ── Lecteur YouTube (room "general" uniquement, max 5 en file) ─────────────
+let ytbPlayer = null;
+let ytbApiReady = false;
+let ytbCurrentQueue = [];
+let ytbCurrentVideoId = null;
+
+if (roomId === 'general') {
+    const ytbTag = document.createElement('script');
+    ytbTag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(ytbTag);
+
+    const YTB_TXT = {
+        FR: { title: '📺 File d\'attente', instr: 'Tape !ytb <lien> dans le chat pour ajouter une vidéo (max 5)', empty: 'File vide — sois le premier à ajouter une vidéo !', nowPlaying: '▶ En cours', skip: 'Passer', minimize: 'Réduire', expand: 'Vidéo' },
+        EN: { title: '📺 Queue', instr: 'Type !ytb <link> in chat to add a video (max 5)', empty: 'Queue empty — be the first to add a video!', nowPlaying: '▶ Now playing', skip: 'Skip', minimize: 'Minimize', expand: 'Video' },
+    };
+    function ytbLang() { return (localStorage.getItem('roomLang') || 'FR') === 'EN' ? YTB_TXT.EN : YTB_TXT.FR; }
+
+    // Position sauvegardée (ou défaut : gauche, centré verticalement)
+    const savedPos = JSON.parse(localStorage.getItem('ytbPos') || 'null');
+    const savedCollapsed = localStorage.getItem('ytbCollapsed') === '1';
+
+    const ytbWrap = document.createElement('div');
+    ytbWrap.id = 'ytbWrap';
+    ytbWrap.style.cssText = 'position:fixed;width:280px;background:#111;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:500;';
+    if (savedPos) { ytbWrap.style.left = savedPos.left; ytbWrap.style.top = savedPos.top; }
+    else { ytbWrap.style.left = '16px'; ytbWrap.style.top = '50%'; ytbWrap.style.transform = 'translateY(-50%)'; }
+    document.body.appendChild(ytbWrap);
+
+    const ytbBubble = document.createElement('button');
+    ytbBubble.id = 'ytbBubble';
+    ytbBubble.style.cssText = 'position:fixed;z-index:500;background:#111;color:#eee;border:none;border-radius:20px;padding:8px 12px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);font-size:12px;display:none;';
+    if (savedPos) { ytbBubble.style.left = savedPos.left; ytbBubble.style.top = savedPos.top; }
+    else { ytbBubble.style.left = '16px'; ytbBubble.style.top = '50%'; }
+    document.body.appendChild(ytbBubble);
+
+    function ytbSavePos(el) {
+        localStorage.setItem('ytbPos', JSON.stringify({ left: el.style.left, top: el.style.top }));
+    }
+
+    function ytbSetCollapsed(collapsed) {
+        localStorage.setItem('ytbCollapsed', collapsed ? '1' : '0');
+        ytbWrap.style.display = collapsed ? 'none' : 'block';
+        ytbBubble.style.display = collapsed ? 'block' : 'none';
+        ytbBubble.style.transform = ytbWrap.style.transform || '';
+    }
+
+    // Glisser-déposer (souris + tactile) sur un élément donné, applique la position à ytbWrap et ytbBubble
+    function makeDraggable(handle) {
+        let dragging = false, offX = 0, offY = 0;
+        function start(clientX, clientY) {
+            dragging = true;
+            const r = ytbWrap.getBoundingClientRect();
+            offX = clientX - r.left; offY = clientY - r.top;
+        }
+        function move(clientX, clientY) {
+            if (!dragging) return;
+            ytbWrap.style.transform = 'none';
+            const maxX = window.innerWidth - ytbWrap.offsetWidth - 4;
+            const maxY = window.innerHeight - ytbWrap.offsetHeight - 4;
+            const left = Math.max(4, Math.min(maxX, clientX - offX));
+            const top = Math.max(4, Math.min(maxY, clientY - offY));
+            ytbWrap.style.left = left + 'px';
+            ytbWrap.style.top = top + 'px';
+        }
+        function end() {
+            if (!dragging) return;
+            dragging = false;
+            ytbSavePos(ytbWrap);
+        }
+        handle.addEventListener('mousedown', (e) => { start(e.clientX, e.clientY); e.preventDefault(); });
+        window.addEventListener('mousemove', (e) => move(e.clientX, e.clientY));
+        window.addEventListener('mouseup', end);
+        handle.addEventListener('touchstart', (e) => { const t = e.touches[0]; start(t.clientX, t.clientY); }, { passive: true });
+        window.addEventListener('touchmove', (e) => { const t = e.touches[0]; if (t) move(t.clientX, t.clientY); }, { passive: true });
+        window.addEventListener('touchend', end);
+    }
+
+    function ytbRenderShell() {
+        const t = ytbLang();
+        ytbWrap.innerHTML = `
+            <div id="ytbHeader" style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:#1a1a1a;cursor:move;">
+                <span style="color:#eee;font-size:12px;font-weight:600;">${t.title}</span>
+                <div>
+                    <button id="ytbSkipBtn" title="${t.skip}" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:14px;margin-right:6px;">⏭️</button>
+                    <button id="ytbMinBtn" title="${t.minimize}" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:14px;">➖</button>
+                </div>
+            </div>
+            <div id="ytbPlayerEl" style="width:280px;height:157px;"></div>
+            <div id="ytbInstr" style="padding:6px 8px;color:#999;font-size:11px;border-top:1px solid #222;">${t.instr}</div>
+            <div id="ytbQueueList" style="padding:4px 8px 8px;font-size:12px;color:#ccc;"></div>
+        `;
+        ytbWrap.querySelector('#ytbSkipBtn').onclick = () => socket.emit('ytb-skip');
+        ytbWrap.querySelector('#ytbMinBtn').onclick = () => ytbSetCollapsed(true);
+        makeDraggable(ytbWrap.querySelector('#ytbHeader'));
+        ytbBubble.textContent = '▶ ' + t.expand;
+    }
+    ytbRenderShell();
+    makeDraggable(ytbBubble);
+    ytbBubble.onclick = (e) => {
+        // Évite de ré-ouvrir juste après un drag (clic déclenché en fin de glisser)
+        if (ytbBubble._wasDragged) { ytbBubble._wasDragged = false; return; }
+        ytbSetCollapsed(false);
+    };
+    ytbSetCollapsed(savedCollapsed);
+
+    function ytbRenderQueue() {
+        const t = ytbLang();
+        const listEl = document.getElementById('ytbQueueList');
+        if (!listEl) return;
+        if (!ytbCurrentQueue.length) { listEl.innerHTML = `<div style="color:#777;">${t.empty}</div>`; return; }
+        listEl.innerHTML = ytbCurrentQueue.map((v, i) =>
+            i === 0
+                ? `<div style="color:#4CAF50;">${t.nowPlaying} — ${v.addedBy}</div>`
+                : `<div style="color:#999;">${i + 1}. ${v.addedBy}</div>`
+        ).join('');
+    }
+
+    window.onYouTubeIframeAPIReady = () => {
+        ytbApiReady = true;
+        ytbPlayer = new YT.Player('ytbPlayerEl', {
+            height: '157', width: '280',
+            playerVars: { autoplay: 1, playsinline: 1, origin: window.location.origin },
+            events: {
+                onReady: () => { if (ytbCurrentQueue.length) ytbLoadCurrent(); },
+                onStateChange: (e) => {
+                    if (e.data === YT.PlayerState.ENDED && ytbCurrentVideoId) {
+                        socket.emit('ytb-ended', { videoId: ytbCurrentVideoId });
+                    }
+                }
+            }
+        });
+    };
+
+    function ytbLoadCurrent() {
+        const first = ytbCurrentQueue[0];
+        if (!first) { ytbCurrentVideoId = null; return; }
+        if (ytbCurrentVideoId !== first.videoId) {
+            ytbCurrentVideoId = first.videoId;
+            if (ytbPlayer && ytbPlayer.loadVideoById) ytbPlayer.loadVideoById(first.videoId);
+        }
+    }
+
+    socket.on('ytb-sync', (data) => {
+        ytbCurrentQueue = (data && data.queue) || [];
+        ytbRenderQueue();
+        if (ytbApiReady && ytbPlayer) ytbLoadCurrent();
+    });
+
+    socket.on('ytb-error', (data) => {
+        if (data && data.message) showNotification(data.message);
+    });
+
+    // Re-render les textes si la langue de la room change
+    const _ytbLangObserver = setInterval(() => {
+        const lang = localStorage.getItem('roomLang') || 'FR';
+        if (ytbWrap.dataset.lang !== lang) {
+            ytbWrap.dataset.lang = lang;
+            ytbRenderShell();
+            ytbRenderQueue();
+        }
+    }, 1000);
+}
+
+// Re-auth as mod on reconnect
+socket.on('reconnect', () => {
+    // Fermer toutes les connexions WebRTC existantes
+    for (const id in peers) {
+        try { peers[id].close(); } catch(e) {}
+        delete peers[id];
+    }
+    // Supprimer tous les éléments DOM des peers distants
+    document.querySelectorAll('.peer.miniature').forEach(el => el.remove());
+    Object.keys(remoteProfiles).forEach(k => delete remoteProfiles[k]);
+    featuredUserId = null;
+    const featuredEl = document.querySelector('.peer.featured');
+    if (featuredEl) featuredEl.classList.add('hidden');
+
+    const modSecret = localStorage.getItem('modSecret');
+    if (modSecret) setTimeout(() => socket.emit('mod-auth', { password: modSecret, displayName: myDisplayName }), 500);
+    if (roomId) {
+        socket.emit('profile-update', { roomId, displayName: myDisplayName, profileColor: myProfileColor, avatarIndex: parseInt(localStorage.getItem('localAvatarIndex') || '0') });
+        socket.emit('join-room', roomId);
+    }
+    if (isModerator) {
+        setTimeout(() => socket.emit('mod-badge', { roomId }), 600);
+    }
+});
+let localStream = null;
+const peers = {};
+
+// Identity Generation
+// ── Générateur de pseudos épiques ────────────────────────────────────────────
+const epicNames = [
+    // Star Wars
+    "Luke","Vader","ObiWan","HanSolo","Leia","Yoda","BobaFett",
+    "Rey","KyloRen","MaceWindu","Ahsoka","Grogu","DarthMaul","Dooku",
+    "Padme","Grievous","Tarkin","Thrawn","JangoFett","Palpatine",
+    "Chewbacca","Lando","Mando","R2D2","C3PO","BB8","Finn","Poe",
+    // DBZ
+    "Goku","Vegeta","Gohan","Piccolo","Frieza","Cell","Buu","Trunks","Broly",
+    "Krillin","Yamcha","Bardock","Raditz","Nappa","Pan","Beerus","Whis","Jiren",
+    // Naruto
+    "Naruto","Sasuke","Sakura","Kakashi","Itachi","Madara","Obito","Minato",
+    "Tsunade","Jiraiya","Orochimaru","Gaara","Shikamaru","Hinata","Neji","Rock Lee",
+    // One Piece
+    "Luffy","Zoro","Nami","Usopp","Sanji","Robin","Chopper","Franky","Brook",
+    "Shanks","Rayleigh","Hancock","Mihawk","Crocodile","Doflamingo","Kaido","Big Mom",
+    "Ace","Sabo","Whitebeard","Roger","Law","Kid","Yamato",
+    // Seigneur des Anneaux
+    "Frodo","Gandalf","Aragorn","Legolas","Gimli","Samwise","Merry","Pippin",
+    "Boromir","Eowyn","Galadriel","Elrond","Saruman","Sauron","Gollum","Thorin","Bilbo",
+    // Marvel
+    "IronMan","Captain","Thor","Hulk","Natasha","Hawkeye","Fury","Wanda",
+    "Vision","Falcon","SpiderMan","Strange","Panther","Marvel","AntMan",
+    "Thanos","Loki","Nebula","Rocket","Groot","Gamora","StarLord","Deadpool","Wolverine",
+    // Harry Potter
+    "Harry","Hermione","Ron","Dumbledore","Snape","Voldemort","Sirius","Lupin",
+    "Bellatrix","Tonks","Moody","Dobby","Draco","Ginny","Luna","Neville","Hagrid",
+    // Gaming
+    "MasterChief","Kratos","Geralt","Link","Samus","Snake","Cloud","Lightning",
+    "Noctis","DoomSlayer","Arthur","Aloy","Ezio","Altair","Ellie","Joel",
+    "Mario","Luigi","Zelda","Pikachu","Snorlax","Mewtwo","Gengar","Eevee","Charizard",
+    // DC
+    "Batman","Superman","WonderWoman","Flash","GreenLantern","Aquaman","Joker","Harley",
+    // Fantasy / Pokémon / Disney
+    "Dragon","Wizard","Elf","Paladin","Necromancer","Phoenix","Unicorn","Vampire","Werewolf",
+    "Simba","Elsa","Moana","Merida","Rapunzel","Mulan","Ariel","Belle","Stitch","Olaf","Genie",
+    "Pikachu","Lugia","Rayquaza","Mewtwo","Mew","Gengar","Snorlax","Eevee","Charizard","Dragonite",
+    // Français
+    "Astérix","Obélix","Gandalf","Lupin","Dantès","Valjean","Quasimodo","Phœnix"
+];
+
+// Couleurs vives et variées
+const pastelColors = [
+    // Pastels doux
+    "#ef9a9a","#f48fb1","#ce93d8","#b39ddb","#9fa8da","#90caf9","#81d4fa","#80deea","#80cbc4","#a5d6a7",
+    // Néons
+    "#ff4081","#e040fb","#7c4dff","#448aff","#00e5ff","#1de9b6","#76ff03","#ffea00","#ff6d00","#ff1744",
+    // Tons chauds
+    "#ff7043","#ffa726","#ffca28","#d4e157","#66bb6a","#26c6da","#42a5f5","#5c6bc0","#ab47bc","#ec407a",
+    // Tons froids
+    "#00bcd4","#009688","#4caf50","#8bc34a","#cddc39","#03a9f4","#2196f3","#3f51b5","#9c27b0","#e91e63",
+    // Spéciaux
+    "#00e676","#40c4ff","#ff6e40","#ffd740","#69f0ae","#ea80fc","#ff80ab","#b388ff","#82b1ff","#84ffff"
+];
+
+function generateRandomName() {
+    return epicNames[Math.floor(Math.random() * epicNames.length)];
+}
+
+let savedColor = localStorage.getItem('profileColor');
+if (!pastelColors.includes(savedColor)) savedColor = null;
+
+// Check URL params for pseudo and color (from shared links)
+const _urlParams = new URLSearchParams(window.location.search);
+const _urlPseudo = _urlParams.get('pseudo');
+const _urlColor = _urlParams.get('color') ? '#' + _urlParams.get('color') : null;
+
+// Lecture profil depuis le hash (#base64 → pseudo:color automatique)
+(function applyHashProfile() {
+    const hash = window.location.hash.replace('#', '').trim();
+    if (!hash || hash.length < 4) return;
+    try {
+        // Décoder le base64url → "pseudo:color"
+        const b64 = hash.replace(/-/g, '+').replace(/_/g, '/');
+        const decoded = decodeURIComponent(escape(atob(b64)));
+        const colonIdx = decoded.lastIndexOf(':');
+        if (colonIdx === -1) return;
+        const pseudo = decoded.slice(0, colonIdx).trim();
+        const color  = decoded.slice(colonIdx + 1).trim();
+        if (!pseudo || !color) return;
+        const fullColor = color.startsWith('#') ? color : '#' + color;
+        if (!/^#[0-9a-fA-F]{6}$/i.test(fullColor)) return;
+        // Appliquer uniquement si pas déjà un profil personnalisé
+        localStorage.setItem('displayName', pseudo);
+        localStorage.setItem('profileColor', fullColor);
+        // Nettoyer le hash sans recharger
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+    } catch (e) {}
+})();
+
+// Check for transferred profile from localStorage (cross-domain)
+let transferredProfile = null;
+let groupProfiles = null;
+try {
+    const stored = localStorage.getItem('transferProfile');
+    if (stored) {
+        const profile = JSON.parse(stored);
+        // Check if profile is less than 5 minutes old
+        if (Date.now() - profile.timestamp < 5 * 60 * 1000) {
+            // Group profiles (multiple users)
+            if (profile.profiles) {
+                groupProfiles = profile.profiles;
+            } else {
+                // Single profile
+                transferredProfile = profile;
+            }
+            // Clear after use
+            localStorage.removeItem('transferProfile');
+        }
+    }
+} catch (e) {
+    console.error('Error reading transferred profile:', e);
+}
+
+// Get or create UUID for this user
+function getUUID() {
+    let uuid = localStorage.getItem('userUUID');
+    if (!uuid) {
+        uuid = crypto.randomUUID();
+        localStorage.setItem('userUUID', uuid);
+    }
+    return uuid;
+}
+
+// Fetch profile from server based on UUID
+async function fetchProfileByUUID() {
+    const uuid = getUUID();
+    try {
+        const response = await fetch('/api/get-profile-by-uuid', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ uuid })
+        });
+        const data = await response.json();
+        if (data.ok && data.profile) {
+            return data.profile;
+        }
+    } catch (e) {
+        console.error('Error fetching profile by UUID:', e);
+    }
+    return null;
+}
+
+// Fetch profile by token (from URL hash #token)
+async function fetchProfileByToken() {
+    const hash = window.location.hash.replace('#', '').trim();
+    if (!hash || hash.length < 5 || hash.includes(':')) return null;
+    try {
+        const res = await fetch('/api/profile-by-token/' + hash);
+        const data = await res.json();
+        if (data.ok) {
+            return { pseudo: data.pseudo, color: data.color };
+        }
+    } catch (e) {}
+    return null;
+}
+
+// Priority: URL params > transferred profile > localStorage > random
+const _matchedGroupProfile = (groupProfiles && groupProfiles.length > 0) ? findMatchingProfile(groupProfiles) : null;
+let _accountReadyResolve;
+const accountReady = new Promise(resolve => { _accountReadyResolve = resolve; });
+
+let myDisplayName  = _urlPseudo
+    || (_matchedGroupProfile ? _matchedGroupProfile.pseudo : null)
+    || (transferredProfile   ? transferredProfile.pseudo   : null)
+    || localStorage.getItem('displayName')
+    || generateRandomName();
+let myProfileColor = (_urlColor && /^#[0-9a-fA-F]{6}$/.test(_urlColor) ? _urlColor : null)
+    || (_matchedGroupProfile && _matchedGroupProfile.color ? '#' + _matchedGroupProfile.color : null)
+    || (transferredProfile && transferredProfile.color ? '#' + transferredProfile.color : null)
+    || savedColor
+    || pastelColors[Math.floor(Math.random() * pastelColors.length)];
+
+localStorage.setItem('displayName', myDisplayName);
+localStorage.setItem('profileColor', myProfileColor);
+
+// Apply UUID or Token profile in background (overrides if found)
+(async () => {
+    let applied = false;
+    // 1. Try Token first (priority)
+    const tokenProfile = await fetchProfileByToken();
+    if (tokenProfile) {
+        myDisplayName  = tokenProfile.pseudo;
+        myProfileColor = tokenProfile.color.startsWith('#') ? tokenProfile.color : '#' + tokenProfile.color;
+        applied = true;
+    } else {
+        // 2. Try UUID fallback
+        const uuidProfile = await fetchProfileByUUID(); // Fix 6: declared in same scope
+        if (uuidProfile) {
+            myDisplayName  = uuidProfile.pseudo || myDisplayName;
+            myProfileColor = uuidProfile.color  || myProfileColor;
+            applied = true;
+        }
+    }
+
+    if (applied) {
+        localStorage.setItem('displayName',   myDisplayName);
+        localStorage.setItem('profileColor',  myProfileColor);
+        const nameInput = document.getElementById('menuPseudoInput');
+        if (nameInput) nameInput.value = myDisplayName;
+        if (typeof updateLocalProfileUI === 'function') updateLocalProfileUI();
+        if (socket && socket.connected && roomId) {
+            socket.emit('profile-update', { roomId, displayName: myDisplayName, profileColor: myProfileColor, avatarIndex: parseInt(localStorage.getItem('localAvatarIndex') || '0') });
+        }
+    }
+
+    // 3. Vérifier compte chaltet_token
+    const chaltetToken = localStorage.getItem('chaltet_token');
+    if (chaltetToken) {
+        try {
+            const res  = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: chaltetToken }) });
+            const data = await res.json();
+            if (data.success) {
+                myDisplayName = data.pseudo;
+                if (data.avatarIndex !== undefined) localStorage.setItem('localAvatarIndex', data.avatarIndex);
+                localStorage.setItem('displayName', myDisplayName);
+                const nameInput = document.getElementById('menuPseudoInput');
+                if (nameInput) {
+                    nameInput.value = myDisplayName;
+                    nameInput.disabled = true;
+                    nameInput.title = 'Pseudo lié à votre compte';
+                    nameInput.style.opacity = '0.6';
+                    nameInput.style.cursor = 'not-allowed';
+                }
+                if (typeof updateLocalProfileUI === 'function') updateLocalProfileUI();
+                if (socket && socket.connected) {
+                    socket.emit('account-login', { pseudo: myDisplayName });
+                    if (roomId) socket.emit('profile-update', { roomId, displayName: myDisplayName, profileColor: myProfileColor, avatarIndex: parseInt(localStorage.getItem('localAvatarIndex') || '0') });
+                }
+            }
+        } catch(e) {}
+    }
+    _accountReadyResolve();
+})();
+
+// Function to find matching profile for current user
+function findMatchingProfile(profiles) {
+    if (!profiles || profiles.length === 0) return null;
+    
+    // Try to match by UUID
+    const uuid = getUUID();
+    if (uuid) {
+        const uuidMatch = profiles.find(p => p.uuid === uuid);
+        if (uuidMatch) return uuidMatch;
+    }
+    
+    // Default: return first profile
+    return profiles[0];
+}
+let allowSoundNotifications = localStorage.getItem('allowSoundNotifications') !== 'false';
+
+// UI Elements
+const welcomeLayer = document.querySelector('.welcome');
+const conversationLayer = document.querySelector('.conversation');
+const backgroundLayer = document.querySelector('.layer.background');
+const chatLayer = document.querySelector('.layer.chat');
+const settingsLayer = document.querySelector('.layer.settings');
+const chatPanel = document.querySelector('.chat .panel');
+const messagesContainer = document.querySelector('.messages');
+const roomNameDisplay = document.querySelector('.roomName');
+const nameInput = document.getElementById('menuPseudoInput');
+const chatInputField = document.querySelector('.chat .input');
+
+// ── Chat : largeur réglable par glisser-déposer ─────────────────────────────
+(function initChatResize() {
+    if (!chatPanel) return;
+    const savedWidth = localStorage.getItem('chatPanelWidth');
+    if (savedWidth) document.documentElement.style.setProperty('--chat-panel-width', savedWidth);
+
+    const handle = document.createElement('div');
+    handle.className = 'resizeHandle';
+    chatPanel.style.position = chatPanel.style.position || 'fixed';
+    chatPanel.appendChild(handle);
+
+    let dragging = false;
+    handle.addEventListener('mousedown', (e) => {
+        dragging = true;
+        handle.classList.add('dragging');
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+    });
+    window.addEventListener('mousemove', (e) => {
+        if (!dragging) return;
+        const newWidth = Math.max(260, Math.min(window.innerWidth * 0.9, window.innerWidth - e.clientX));
+        document.documentElement.style.setProperty('--chat-panel-width', newWidth + 'px');
+    });
+    window.addEventListener('mouseup', () => {
+        if (!dragging) return;
+        dragging = false;
+        handle.classList.remove('dragging');
+        document.body.style.userSelect = '';
+        localStorage.setItem('chatPanelWidth', getComputedStyle(document.documentElement).getPropertyValue('--chat-panel-width').trim());
+    });
+    // Support tactile (tablette avec souris/pointeur, pas mobile plein écran)
+    handle.addEventListener('touchstart', () => { dragging = true; handle.classList.add('dragging'); }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+        if (!dragging || !e.touches[0]) return;
+        const newWidth = Math.max(260, Math.min(window.innerWidth * 0.9, window.innerWidth - e.touches[0].clientX));
+        document.documentElement.style.setProperty('--chat-panel-width', newWidth + 'px');
+    }, { passive: true });
+    window.addEventListener('touchend', () => {
+        if (!dragging) return;
+        dragging = false;
+        handle.classList.remove('dragging');
+        localStorage.setItem('chatPanelWidth', getComputedStyle(document.documentElement).getPropertyValue('--chat-panel-width').trim());
+    });
+})();
+
+// Buttons
+const joinVideoBtn = document.querySelector('.joinVideo');
+const joinAudioBtn = document.querySelector('.joinAudio');
+const joinChatBtn = document.querySelector('.joinChat');
+const toggleChatBtn = document.querySelector('.toggleChat');
+const toggleMenuBtn = document.querySelector('.toggleMenu');
+const menuElement = document.querySelector('.menu');
+const soundNotificationsCheckbox = document.getElementById('soundNotifications');
+let isModerator = false;
+
+const toggleVideoBtn = document.querySelector('.toggleVideo');
+const toggleAudioBtn = document.querySelector('.toggleAudio');
+// toggleScreenShareBtn : fonctionnalité désactivée (button retiré de l'UI)
+
+const videoSelect = document.getElementById('videoSource');
+const audioSelect = document.getElementById('audioSource');
+
+// Sounds
+const audioUnconvinced = document.getElementById('audioUnconvinced');
+const audioUnsure = document.getElementById('audioUnsure');
+const audioMessage = document.getElementById('audioMessage');
+
+const remoteProfiles = {};
+const mutedPeers = new Set(); // IDs des peers mutés par le mod
+let screenStream;
+let featuredUserId = null;
+let iceServersConfig = [{ urls: 'stun:stun.l.google.com:19302' }];
+
+function sanitizeColor(color) {
+    if (/^#[0-9a-fA-F]{6}$/.test(color)) return color;
+    return '#4A90E2';
+}
+
+function escapeHTML(str) {
+    const p = document.createElement("p");
+    p.appendChild(document.createTextNode(str));
+    return p.innerHTML;
+}
+
+function linkify(str) {
+    const urlRegex = /(https?:\/\/[^\s<>"]+)/g;
+    const parts = str.split(urlRegex);
+    return parts.map((part, i) => {
+        if (i % 2 === 1) {
+            const safeUrl = part.replace(/"/g, '%22');
+            return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer" style="color:#77FFFF;text-decoration:underline;">' + escapeHTML(part) + '</a>';
+        }
+        return escapeHTML(part);
+    }).join('');
+}
+
+// ── Navigation entre rooms via commande /room ────────────────────────────────
+// Tape "/friends" dans le chat → génère un lien à usage unique vers /friends.
+// Le lien n'est valable qu'une fois et que depuis la room actuelle : pour aller
+// d'une room à une autre, il faut toujours repartir de la dernière room connue
+// (ou de /general, toujours accessible directement).
+function addSystemMessage(text) {
+    const div = document.createElement('div');
+    div.className = 'message hint';
+    div.textContent = text;
+    messagesContainer.appendChild(div);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+async function handleRoomCommand(rawTarget) {
+    const target = rawTarget.trim().toLowerCase().replace(/[^a-z0-9\-_]/g, '');
+    if (!target) {
+        addSystemMessage('⚠️ Nom de room invalide. Exemple : /friends');
+        return;
+    }
+    try {
+        const res = await fetch('/api/room-link', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ target })
+        });
+        const data = await res.json();
+        if (data.ok) {
+            // Envoyé comme vrai message de chat → visible et cliquable par tout le monde
+            // dans la room. Marqueur spécial pour afficher juste "/room" au lieu de
+            // l'URL complète avec le token (voir socket.on('chat-message')).
+            const fullUrl = window.location.origin + data.url;
+            socket.emit('chat-message', {
+                roomId,
+                userName: myDisplayName,
+                message: '\u0001ROOMLINK\u0001' + data.room + '\u0001' + fullUrl,
+                color: myProfileColor
+            });
+        } else {
+            addSystemMessage('⚠️ ' + (data.message || 'Impossible de créer le lien.'));
+        }
+    } catch (e) {
+        addSystemMessage('⚠️ Erreur serveur.');
+    }
+}
+
+function updateLocalProfileUI() {
+    const localPeer = document.querySelector('.peer.local');
+    const localName = document.querySelector('.peer.local .name');
+    if (localPeer) {
+        const av = getLocalAvatar();
+        localPeer.style.backgroundColor = av.bg;
+        localPeer.style.backgroundImage = 'url(' + av.img + ')';
+        localPeer.style.backgroundSize = 'cover';
+        localPeer.style.backgroundPosition = 'center';
+    }
+    if (localName) { localName.innerText = myDisplayName; }
+    
+    // Update featured if local is featured
+    if (featuredUserId === 'local') {
+        setFeatured('local');
+    }
+}
+
+// Initialization
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 3000);
+        const res = await fetch('/api/ice-servers', { signal: controller.signal });
+        clearTimeout(timeout);
+        if (res.ok) iceServersConfig = await res.json();
+    } catch(e) { console.warn('Could not fetch ICE servers config, using default STUN', e); }
+
+    roomNameDisplay.innerText = roomId;
+    nameInput.value = myDisplayName;
+
+    // Bandeau explicatif — visible uniquement dans /general
+    if (roomId === 'general') {
+        const generalHint = document.getElementById('generalHint');
+        if (generalHint) generalHint.classList.remove('hidden');
+    }
+
+    if (soundNotificationsCheckbox) soundNotificationsCheckbox.checked = allowSoundNotifications;
+
+    const inviteLink = document.getElementById('inviteLink');
+    if (inviteLink) inviteLink.innerText = window.location.host + '/' + roomId;
+
+    // Menu avatar display
+    const menuAvatarImg = document.getElementById('menuAvatarImg');
+    if (menuAvatarImg) {
+        const av = getLocalAvatar();
+        menuAvatarImg.style.backgroundImage = 'url(' + av.img + ')';
+        menuAvatarImg.style.backgroundColor = av.bg;
+    }
+
+    // Menu invite link (init room input) — déclaré plus bas, init ici
+    const menuRoomInputEarly = document.getElementById('menuRoomInput');
+    if (menuRoomInputEarly) menuRoomInputEarly.value = roomId || '';
+
+    // Bouton changer avatar
+    const menuAvatarRefresh = document.getElementById('menuAvatarRefresh');
+    if (menuAvatarRefresh) {
+        menuAvatarRefresh.addEventListener('click', () => {
+            const newIdx = Math.floor(Math.random() * AVATARS.length);
+            localStorage.setItem('localAvatarIndex', newIdx);
+            _localAvatar = AVATARS[newIdx];
+            if (menuAvatarImg) {
+                menuAvatarImg.style.backgroundImage = 'url(' + _localAvatar.img + ')';
+                menuAvatarImg.style.backgroundColor = _localAvatar.bg;
+            }
+            updateLocalProfileUI();
+        });
+    }
+
+    // Pseudo éditable dans le menu
+    const menuPseudoInput = document.getElementById('menuPseudoInput');
+    if (menuPseudoInput) {
+        menuPseudoInput.value = myDisplayName || '';
+        // Bloquer si compte enregistré
+        if (localStorage.getItem('chaltet_token')) {
+            menuPseudoInput.disabled = true;
+            menuPseudoInput.title = 'Pseudo lié à votre compte';
+            menuPseudoInput.style.opacity = '0.6';
+            menuPseudoInput.style.cursor = 'not-allowed';
+        }
+        menuPseudoInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const newName = menuPseudoInput.value.trim();
+                if (!newName) return;
+                // Validations client
+                if (newName.length > 20) { alert('Le pseudo ne doit pas dépasser 20 caractères.'); return; }
+                if (/<|>/.test(newName)) { alert('Le pseudo ne peut pas contenir de balises.'); return; }
+                if (/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\uFEFF]/.test(newName)) { alert('Le pseudo contient des caractères invalides.'); return; }
+                if (/(.)\1{4,}/.test(newName)) { alert('Le pseudo contient trop de caractères répétés.'); return; }
+                if (/[\u{1F000}-\u{1FFFF}]/u.test(newName)) { alert('Les emojis ne sont pas autorisés.'); return; }
+                if (/[\u0300-\u036f]{2,}/.test(newName)) { alert('Le pseudo contient des caractères non autorisés.'); return; }
+                if (newName) {
+                    myDisplayName = newName;
+                    localStorage.setItem('displayName', myDisplayName);
+                    updateLocalProfileUI();
+                    if (socket && socket.connected) socket.emit('profile-update', { roomId, displayName: myDisplayName, profileColor: myProfileColor, avatarIndex: parseInt(localStorage.getItem('localAvatarIndex') || '0') });
+                }
+                menuPseudoInput.blur();
+            }
+        });
+    }
+
+    // Room input éditable
+    const menuRoomInput = document.getElementById('menuRoomInput');
+    if (menuRoomInput) {
+        menuRoomInput.value = roomId || '';
+        menuRoomInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') menuRoomInput.blur();
+        });
+    }
+
+    // Bouton copier le lien (mise à jour)
+    const menuCopyLinkBtn = document.getElementById('menuCopyLink');
+    if (menuCopyLinkBtn) {
+        menuCopyLinkBtn.addEventListener('click', () => {
+            const roomVal = menuRoomInput ? menuRoomInput.value.trim() || roomId : roomId;
+            const link = window.location.protocol + '//' + window.location.host + '/' + roomVal;
+            navigator.clipboard.writeText(link).then(() => {
+                const span = document.getElementById('mlCopy');
+                if (span) { const old = span.textContent; span.textContent = '✅ Copié!'; setTimeout(() => span.textContent = old, 2000); }
+            });
+        });
+    }
+
+    // ── Système de traductions ─────────────────────────────────────────────
+    const ROOM_LANGS = {
+        FR: { mlLang:'Langue', mlDevices:'Appareils', mlCamera:'Caméra', mlCameraOpt:'Autorisation requise', mlMic:'Micro', mlMicOpt:'Autorisation requise', mlPrefs:'Préférences', mlSound:'Notifications sonores', mlRoom:'Room', mlCopy:'Copier le lien', mlAbout:'À propos', mlTagline:'Appels vidéo, audio & chat.<br>Sans compte · Sans téléchargement · Peer-to-peer.', mlF1:'Peer-to-peer & chiffré', mlF2:'Aucune donnée stockée', mlF3:'Gratuit', mlAge:'⚠️ Site strictement réservé aux personnes de 18 ans et plus', mlCguText:'En accédant à chaltet.com, vous acceptez les', mlCguLink:'CGU', menuCguClose:'Fermer', menuPseudoHint:'Appuie sur Entrée pour valider' },
+        EN: { mlLang:'Language', mlDevices:'Devices', mlCamera:'Camera', mlCameraOpt:'Permission required', mlMic:'Microphone', mlMicOpt:'Permission required', mlPrefs:'Preferences', mlSound:'Sound notifications', mlRoom:'Room', mlCopy:'Copy link', mlAbout:'About', mlTagline:'Video, audio & chat calls.<br>No account · No download · Peer-to-peer.', mlF1:'Peer-to-peer & encrypted', mlF2:'No data stored', mlF3:'Free', mlAge:'⚠️ Site strictly reserved for people aged 18 and over', mlCguText:'By accessing chaltet.com, you agree to the', mlCguLink:'ToS', menuCguClose:'Close', menuPseudoHint:'Press Enter to validate' },
+        ES: { mlLang:'Idioma', mlDevices:'Dispositivos', mlCamera:'Cámara', mlCameraOpt:'Permiso requerido', mlMic:'Micrófono', mlMicOpt:'Permiso requerido', mlPrefs:'Preferencias', mlSound:'Notificaciones de sonido', mlRoom:'Sala', mlCopy:'Copiar enlace', mlAbout:'Acerca de', mlTagline:'Llamadas de vídeo, audio y chat.<br>Sin cuenta · Sin descarga · Peer-to-peer.', mlF1:'Peer-to-peer y cifrado', mlF2:'Sin datos almacenados', mlF3:'Gratis', mlAge:'⚠️ Sitio estrictamente reservado para mayores de 18 años', mlCguText:'Al acceder a chaltet.com, aceptas los', mlCguLink:'TdU', menuCguClose:'Cerrar', menuPseudoHint:'Pulsa Enter para validar' },
+        AR: { mlLang:'اللغة', mlDevices:'الأجهزة', mlCamera:'الكاميرا', mlCameraOpt:'إذن مطلوب', mlMic:'الميكروفون', mlMicOpt:'إذن مطلوب', mlPrefs:'التفضيلات', mlSound:'إشعارات صوتية', mlRoom:'الغرفة', mlCopy:'نسخ الرابط', mlAbout:'حول', mlTagline:'مكالمات فيديو وصوت ودردشة.<br>بدون حساب · بدون تنزيل · نظير إلى نظير.', mlF1:'نظير إلى نظير ومشفر', mlF2:'لا يتم تخزين أي بيانات', mlF3:'مجاني', mlAge:'⚠️ الموقع مخصص حصريًا للأشخاص الذين تبلغ أعمارهم 18 عامًا فما فوق', mlCguText:'بالوصول إلى chaltet.com، توافق على', mlCguLink:'الشروط', menuCguClose:'إغلاق', menuPseudoHint:'اضغط Enter للتأكيد' },
+        PT: { mlLang:'Idioma', mlDevices:'Dispositivos', mlCamera:'Câmera', mlCameraOpt:'Permissão necessária', mlMic:'Microfone', mlMicOpt:'Permissão necessária', mlPrefs:'Preferências', mlSound:'Notificações sonoras', mlRoom:'Sala', mlCopy:'Copiar link', mlAbout:'Sobre', mlTagline:'Chamadas de vídeo, áudio e chat.<br>Sem conta · Sem download · Peer-to-peer.', mlF1:'Peer-to-peer e criptografado', mlF2:'Nenhum dado armazenado', mlF3:'Grátis', mlAge:'⚠️ Site estritamente reservado para maiores de 18 anos', mlCguText:'Ao acessar chaltet.com, você concorda com os', mlCguLink:'ToS', menuCguClose:'Fechar', menuPseudoHint:'Pressione Enter para validar' },
+        RU: { mlLang:'Язык', mlDevices:'Устройства', mlCamera:'Камера', mlCameraOpt:'Требуется разрешение', mlMic:'Микрофон', mlMicOpt:'Требуется разрешение', mlPrefs:'Настройки', mlSound:'Звуковые уведомления', mlRoom:'Комната', mlCopy:'Копировать ссылку', mlAbout:'О сервисе', mlTagline:'Видео, аудио и чат.<br>Без аккаунта · Без загрузки · Peer-to-peer.', mlF1:'Peer-to-peer и шифрование', mlF2:'Данные не хранятся', mlF3:'Бесплатно', mlAge:'⚠️ Сайт строго для лиц старше 18 лет', mlCguText:'Используя chaltet.com, вы соглашаетесь с', mlCguLink:'УИ', menuCguClose:'Закрыть', menuPseudoHint:'Нажмите Enter для подтверждения' },
+        ZH: { mlLang:'语言', mlDevices:'设备', mlCamera:'摄像头', mlCameraOpt:'需要权限', mlMic:'麦克风', mlMicOpt:'需要权限', mlPrefs:'偏好设置', mlSound:'声音通知', mlRoom:'房间', mlCopy:'复制链接', mlAbout:'关于', mlTagline:'视频、音频和聊天通话。<br>无需账户 · 无需下载 · 点对点。', mlF1:'点对点加密', mlF2:'不存储任何数据', mlF3:'免费', mlAge:'⚠️ 本网站严格限于18岁及以上人士使用', mlCguText:'访问 chaltet.com 即表示您同意', mlCguLink:'条款', menuCguClose:'关闭', menuPseudoHint:'按 Enter 确认' },
+    };
+
+    const CGU_TEXT = {
+        FR: `<h3>Conditions Générales d'Utilisation</h3><p>En utilisant Chaltet, vous acceptez les conditions suivantes :</p><ul><li>Vous devez avoir 18 ans ou plus.</li><li>Il est interdit de partager du contenu illégal, offensant ou violent.</li><li>Chaltet est un service peer-to-peer. Aucune donnée n'est stockée.</li><li>Nous nous réservons le droit de bloquer tout utilisateur en violation de ces règles.</li></ul>`,
+        EN: `<h3>Terms of Service</h3><p>By using Chaltet, you agree to the following:</p><ul><li>You must be 18 years or older.</li><li>Sharing illegal, offensive or violent content is prohibited.</li><li>Chaltet is a peer-to-peer service. No data is stored.</li><li>We reserve the right to block any user violating these rules.</li></ul>`,
+        ES: `<h3>Términos de Uso</h3><p>Al usar Chaltet, aceptas lo siguiente:</p><ul><li>Debes tener 18 años o más.</li><li>Está prohibido compartir contenido ilegal, ofensivo o violento.</li><li>Chaltet es un servicio peer-to-peer. No se almacenan datos.</li><li>Nos reservamos el derecho de bloquear a cualquier usuario que viole estas reglas.</li></ul>`,
+        AR: `<h3>شروط الاستخدام</h3><p>باستخدام Chaltet، توافق على ما يلي:</p><ul><li>يجب أن يكون عمرك 18 عامًا أو أكثر.</li><li>يُحظر مشاركة المحتوى غير القانوني أو المسيء أو العنيف.</li><li>Chaltet خدمة نظير إلى نظير. لا يتم تخزين أي بيانات.</li><li>نحتفظ بالحق في حظر أي مستخدم ينتهك هذه القواعد.</li></ul>`,
+        PT: `<h3>Termos de Uso</h3><p>Ao usar o Chaltet, você concorda com o seguinte:</p><ul><li>Você deve ter 18 anos ou mais.</li><li>É proibido compartilhar conteúdo ilegal, ofensivo ou violento.</li><li>Chaltet é um serviço peer-to-peer. Nenhum dado é armazenado.</li><li>Reservamo-nos o direito de bloquear qualquer usuário que viole estas regras.</li></ul>`,
+        RU: `<h3>Условия использования</h3><p>Используя Chaltet, вы соглашаетесь со следующим:</p><ul><li>Вам должно быть 18 лет или старше.</li><li>Запрещено делиться незаконным, оскорбительным или жестоким контентом.</li><li>Chaltet — это peer-to-peer сервис. Данные не хранятся.</li><li>Мы оставляем за собой право заблокировать любого нарушителя.</li></ul>`,
+        ZH: `<h3>使用条款</h3><p>使用 Chaltet，即表示您同意以下内容：</p><ul><li>您必须年满18岁。</li><li>禁止分享非法、冒犯性或暴力内容。</li><li>Chaltet 是点对点服务，不存储任何数据。</li><li>我们保留封锁违规用户的权利。</li></ul>`,
+    };
+
+    let currentRoomLang = localStorage.getItem('roomLang') || 'FR';
+
+    function applyRoomLang(lang) {
+        const t = ROOM_LANGS[lang];
+        if (!t) return;
+        currentRoomLang = lang;
+        localStorage.setItem('roomLang', lang);
+        Object.keys(t).forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (id === 'mlTagline') el.innerHTML = t[id];
+            else el.textContent = t[id];
+        });
+        document.querySelectorAll('.menu-lang-flag').forEach(f => f.classList.remove('active'));
+        const activeFlag = document.getElementById('mflag' + lang);
+        if (activeFlag) activeFlag.classList.add('active');
+        const menuCguModalClose = document.getElementById('menuCguClose');
+        if (menuCguModalClose) menuCguModalClose.textContent = t.menuCguClose;
+    }
+
+    ['FR','EN','ES','AR','PT','RU','ZH'].forEach(lang => {
+        const flag = document.getElementById('mflag' + lang);
+        if (flag) flag.addEventListener('click', () => applyRoomLang(lang));
+    });
+
+    applyRoomLang(currentRoomLang);
+
+    // CGU Modal
+    const menuCguBtn = document.getElementById('menuCguBtn');
+    const menuCguModal = document.getElementById('menuCguModal');
+    const menuCguClose = document.getElementById('menuCguClose');
+    const menuCguBody = document.getElementById('menuCguBody');
+    if (menuCguBtn && menuCguModal) {
+        menuCguBtn.addEventListener('click', () => {
+            if (menuCguBody) menuCguBody.innerHTML = CGU_TEXT[currentRoomLang] || CGU_TEXT.FR;
+            menuCguModal.classList.add('open');
+        });
+    }
+    if (menuCguClose && menuCguModal) {
+        menuCguClose.addEventListener('click', () => menuCguModal.classList.remove('open'));
+    }
+    if (menuCguModal) {
+        menuCguModal.addEventListener('click', (e) => { if (e.target === menuCguModal) menuCguModal.classList.remove('open'); });
+    }
+
+    if (roomId === 'kids') {
+        backgroundLayer.style.backgroundImage = "url('/backgroundkids.jpg')";
+    } else if (roomId === 'turtle') {
+        backgroundLayer.style.backgroundImage = "url('/background-turtle.webp')";
+        backgroundLayer.style.backgroundSize = 'cover';
+        backgroundLayer.style.backgroundPosition = 'center';
+    } else if (roomId === 'lildurk') {
+        backgroundLayer.style.backgroundImage = "url('/background-lildurk.webp')";
+        backgroundLayer.style.backgroundSize = 'cover';
+        backgroundLayer.style.backgroundPosition = 'center top';
+    } else if (roomId === 'ovo') {
+        backgroundLayer.style.backgroundImage = "url('/background-ovo.jpg')";
+        backgroundLayer.style.backgroundSize = 'contain';
+        backgroundLayer.style.backgroundRepeat = 'no-repeat';
+        backgroundLayer.style.backgroundPosition = 'center center';
+    } else if (roomId === 'nutquack') {
+        backgroundLayer.style.backgroundImage = "url('https://images.unsplash.com/photo-1459262838948-3e2de6c1ec80?w=1600&q=80')";
+    } else if (roomId === 'elly') {
+        backgroundLayer.style.backgroundImage = "url('/elly.jpeg')";
+        backgroundLayer.style.backgroundSize = 'cover';
+        backgroundLayer.style.backgroundPosition = 'center';
+    } else if (roomId === 'bonjour') {
+        backgroundLayer.style.backgroundImage = "url('/background-bonjour.jpg')";
+        backgroundLayer.style.backgroundSize = 'cover';
+        backgroundLayer.style.backgroundPosition = 'center';
+    } else if (roomId === 'grenadine') {
+        backgroundLayer.style.backgroundImage = "url('/background-grenadine.jpg')";
+        backgroundLayer.style.backgroundSize = 'contain';
+        backgroundLayer.style.backgroundRepeat = 'no-repeat';
+        backgroundLayer.style.backgroundPosition = 'center center';
+        backgroundLayer.style.backgroundColor = '#000000';
+    } else if (roomId === 'grenouille') {
+        backgroundLayer.style.backgroundImage = "url('/background-grenouille.webp')";
+        backgroundLayer.style.backgroundSize = 'contain';
+        backgroundLayer.style.backgroundRepeat = 'no-repeat';
+        backgroundLayer.style.backgroundPosition = 'center center';
+        backgroundLayer.style.backgroundColor = '#7ecfd4';
+    } else {
+        // Rooms sans image personnalisée → image nature/animaux aléatoire
+        const NATURE_BACKGROUNDS = [
+            // Forêts
+            'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1600&q=80',
+            'https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?w=1600&q=80',
+            'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600&q=80',
+            'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1600&q=80',
+            'https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=1600&q=80',
+            // Océans & plages
+            'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1600&q=80',
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80',
+            'https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=1600&q=80',
+            'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=1600&q=80',
+            'https://images.unsplash.com/photo-1471922694854-ff1b63b20054?w=1600&q=80',
+            // Montagnes
+            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80',
+            'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1600&q=80',
+            'https://images.unsplash.com/photo-1434394354979-a235cd36269d?w=1600&q=80',
+            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80',
+            'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=80',
+            // Couchers de soleil
+            'https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=1600&q=80',
+            'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1600&q=80',
+            'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&q=80',
+            'https://images.unsplash.com/photo-1490682143684-14369e18dce8?w=1600&q=80',
+            'https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?w=1600&q=80',
+            // Animaux — mammifères
+            'https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=1600&q=80',
+            'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1600&q=80',
+            'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=1600&q=80',
+            'https://images.unsplash.com/photo-1551969014-7d2c4cddf0b6?w=1600&q=80',
+            'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=1600&q=80',
+            // Animaux — oiseaux
+            'https://images.unsplash.com/photo-1444464666168-49d633b86797?w=1600&q=80',
+            'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=1600&q=80',
+            'https://images.unsplash.com/photo-1522926193341-e9ffd686c60f?w=1600&q=80',
+            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80',
+            'https://images.unsplash.com/photo-1440648130659-8474a2aa671f?w=1600&q=80',
+            // Animaux — marins
+            'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1600&q=80',
+            'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1600&q=80',
+            'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=1600&q=80',
+            'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=1600&q=80',
+            'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=1600&q=80',
+            // Cascades & lacs
+            'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=1600&q=80',
+            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1600&q=80',
+            'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1600&q=80',
+            'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1600&q=80',
+            'https://images.unsplash.com/photo-1455218873509-8097305ee378?w=1600&q=80',
+            // Déserts & paysages arides
+            'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=80',
+            'https://images.unsplash.com/photo-1504192010706-dd7f569ee2be?w=1600&q=80',
+            'https://images.unsplash.com/photo-1518623489648-a173ef7824f3?w=1600&q=80',
+            // Champs & prairies
+            'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600&q=80',
+            'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1600&q=80',
+            'https://images.unsplash.com/photo-1490750967868-88df5691cc84?w=1600&q=80',
+            'https://images.unsplash.com/photo-1464347744102-11db6282a4a5?w=1600&q=80',
+            // Aurores boréales & ciel étoilé
+            'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1600&q=80',
+            'https://images.unsplash.com/photo-1464852045489-bccb7d17fe39?w=1600&q=80',
+            'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1600&q=80',
+            'https://images.unsplash.com/photo-1444080748397-f442aa95c3e5?w=1600&q=80',
+        ];
+
+        // Seed basée sur le nom de la room pour que la même room ait toujours la même image
+        let seed = 0;
+        for (let i = 0; i < roomId.length; i++) seed += roomId.charCodeAt(i);
+        const bgUrl = NATURE_BACKGROUNDS[seed % NATURE_BACKGROUNDS.length];
+        backgroundLayer.style.backgroundImage = `url('${bgUrl}')`;
+        backgroundLayer.style.backgroundSize = 'cover';
+        backgroundLayer.style.backgroundPosition = 'center';
+    }
+    chatInputField.style.color = myProfileColor;
+
+    updateLocalProfileUI();
+
+    toggleVideoBtn.addEventListener('click', handleToggleVideo);
+    toggleAudioBtn.addEventListener('click', handleToggleAudio);
+
+    joinVideoBtn.addEventListener('click', () => { noSleep.enable(); start(true, true); });
+    joinAudioBtn.addEventListener('click', () => { noSleep.enable(); start(false, true); });
+    joinChatBtn.addEventListener('click', () => { noSleep.enable(); start(false, false); });
+
+    toggleChatBtn.addEventListener('click', () => {
+        chatPanel.classList.toggle('hidden');
+        const snippet = document.querySelector('.snippet');
+        if (snippet) snippet.classList.add('hidden');
+    });
+    toggleMenuBtn.addEventListener('click', () => menuElement.classList.toggle('hidden'));
+
+    if (soundNotificationsCheckbox) {
+        soundNotificationsCheckbox.addEventListener('change', (e) => {
+            allowSoundNotifications = e.target.checked;
+            localStorage.setItem('allowSoundNotifications', allowSoundNotifications);
+        });
+    }
+
+
+    socket.on('mod-status', (status) => {
+        isModerator = status;
+        if (status) {
+            // Add buttons on all existing miniatures
+            document.querySelectorAll('.peer.miniature').forEach(peer => addModButtons(peer));
+            // Show badge on local avatar
+            addModBadge(document.querySelector('.peer.local'));
+            // Tell others I am mod
+            socket.emit('mod-badge', { roomId });
+        }
+    });
+
+    socket.on('mod-badge', (data) => {
+        // Show badge on remote peer - retry if DOM not ready yet
+        const applyBadge = () => {
+            const el = document.getElementById(`peer-${data.id}`);
+            if (el) {
+                addModBadge(el);
+            } else {
+                setTimeout(applyBadge, 300);
+            }
+            if (featuredUserId === data.id) {
+                addModBadge(document.querySelector('.peer.featured'));
+            }
+        };
+        applyBadge();
+    });
+
+    // Confirmation serveur quand un peer est muté/démuté → sync boutons mod
+    socket.on('mod-mute-ack', (data) => {
+        const { targetId, muted } = data;
+        if (muted) {
+            mutedPeers.add(targetId);
+        } else {
+            mutedPeers.delete(targetId);
+        }
+        syncMuteButtons(targetId);
+        // Sync aussi le featured si c'est lui
+        if (featuredUserId === targetId) {
+            const featuredEl = document.querySelector('.peer.featured');
+            if (featuredEl) {
+                featuredEl.querySelector('.mod-controls')?.remove();
+                const id = targetId;
+                const modDiv = document.createElement('div');
+                modDiv.id = 'featured-mod-controls';
+                modDiv.className = 'mod-controls';
+                modDiv.style.cssText = 'position:absolute;top:10px;left:10px;display:flex;gap:6px;z-index:10;flex-wrap:wrap;';
+                const makeBtn = (label, bg, action) => {
+                    const btn = document.createElement('button');
+                    btn.innerText = label;
+                    btn.style.cssText = `font-size:12px;padding:4px 10px;width:auto;height:auto;background:${bg};color:white;border:none;border-radius:4px;cursor:pointer;`;
+                    btn.onclick = (e) => { e.stopPropagation(); socket.emit(action, id); };
+                    return btn;
+                };
+                modDiv.appendChild(makeBtn('Kick', '#ff8800', 'mod-kick'));
+                modDiv.appendChild(makeBtn('Kick 30s', '#ff5500', 'mod-kick-temp'));
+                modDiv.appendChild(makeBtn('Ban', '#cc0000', 'mod-ban'));
+                modDiv.appendChild(buildMuteBtn(id, false, '12px', '4px 10px'));
+                featuredEl.appendChild(modDiv);
+            }
+        }
+    });
+
+    socket.on('mod-action', (action) => {
+        const type = typeof action === 'object' ? action.type : action;
+        const by   = typeof action === 'object' ? (action.by || 'Mod') : 'Mod';
+
+        if (type === 'muted') {
+            chatInputField.disabled = true;
+            chatInputField.placeholder = 'You are muted by ' + by + '.';
+            if (localStream) {
+                localStream.getAudioTracks().forEach(t => { t.enabled = false; });
+                toggleAudioBtn.classList.add('off');
+            }
+            showModOverlay('Muted by ' + by, () => {}, true);
+        } else if (type === 'unmuted') {
+            chatInputField.disabled = false;
+            chatInputField.placeholder = '';
+            if (localStream) {
+                localStream.getAudioTracks().forEach(t => { t.enabled = true; });
+                toggleAudioBtn.classList.remove('off');
+            }
+            showModOverlay('Unmuted by ' + by, () => {}, true);
+        } else if (type === 'kicked') {
+            socket.disconnect();
+            showModOverlay('KICK by ' + by, () => window.location.reload());
+        } else if (type === 'kicked-temp') {
+            socket.disconnect();
+            showModOverlay('KICK 30s by ' + by, () => {
+                // Attendre 30s avant de permettre le retour
+                setTimeout(() => window.location.reload(), 30000);
+            });
+        } else if (type === 'banned') {
+            socket.disconnect();
+            showModOverlay('BAN by ' + by, () => { window.location.href = 'https://www.google.com'; });
+        }
+    });
+
+    nameInput.addEventListener('input', (e) => {
+        myDisplayName = e.target.value.substring(0, 50);
+        localStorage.setItem('displayName', myDisplayName);
+        updateLocalProfileUI();
+        socket.emit('profile-update', { roomId, displayName: myDisplayName, profileColor: myProfileColor, avatarIndex: parseInt(localStorage.getItem('localAvatarIndex') || '0') });
+    });
+
+    // Limite 200 caractères côté client (feedback immédiat)
+    chatInputField.maxLength = 200;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            if (document.activeElement !== chatInputField) {
+                chatPanel.classList.remove('hidden');
+                chatInputField.focus();
+            } else {
+                const msg = chatInputField.value.trim();
+                if (msg !== '') {
+                    if (msg.startsWith('/')) {
+                        handleRoomCommand(msg.slice(1));
+                        chatInputField.value = '';
+                    } else {
+                        socket.emit('chat-message', { roomId, userName: myDisplayName, message: msg.substring(0, 200), color: myProfileColor });
+                        chatInputField.value = '';
+                    }
+                } else {
+                    chatPanel.classList.add('hidden');
+                    chatInputField.blur();
+                }
+            }
+        }
+    });
+
+    const featuredMuteBtn = document.querySelector('.peer.featured .toggleMute');
+    const featuredVideoBtn = document.querySelector('.peer.featured .toggleRemoteVideo');
+    const featuredVideoEl = document.querySelector('.peer.featured video');
+
+    if (featuredMuteBtn && featuredVideoEl) {
+        featuredMuteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            featuredVideoEl.muted = !featuredVideoEl.muted;
+            featuredMuteBtn.classList.toggle('muted', featuredVideoEl.muted);
+            if (featuredUserId && featuredUserId !== 'local' && featuredUserId !== 'local-screen') {
+                const mini = document.getElementById(`peer-${featuredUserId}`);
+                if (mini) mini.querySelector('.toggleMute').classList.toggle('muted', featuredVideoEl.muted);
+            }
+        });
+    }
+
+    if (featuredVideoBtn && featuredVideoEl) {
+        featuredVideoBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = featuredVideoEl.style.opacity === '0';
+            featuredVideoEl.style.opacity = isHidden ? '1' : '0';
+            featuredVideoBtn.classList.toggle('muted', !isHidden);
+            if (featuredUserId && featuredUserId !== 'local' && featuredUserId !== 'local-screen') {
+                const mini = document.getElementById(`peer-${featuredUserId}`);
+                if (mini) mini.querySelector('.toggleRemoteVideo').classList.toggle('muted', !isHidden);
+            }
+        });
+    }
+
+});
+
+async function handleToggleVideo() {
+    if (!localStream) localStream = new MediaStream();
+
+    if (localStream.getVideoTracks().length === 0) {
+        // Pas encore de track — on crée et active directement
+        try {
+            const newStream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 480 } } });
+            const track = newStream.getVideoTracks()[0];
+            track.enabled = true;
+            localStream.addTrack(track);
+            for (const id in peers) {
+                const sender = peers[id].getSenders().find(s => s.track && s.track.kind === 'video');
+                if (sender) {
+                    sender.replaceTrack(track);
+                } else {
+                    peers[id].addTrack(track, localStream);
+                }
+            }
+            updateLocalVideoElement(localStream);
+            toggleVideoBtn.classList.remove('off');
+            updateVideoVisibility('local', true);
+            socket.emit('video-status', { roomId, enabled: true });
+            // Si on est seul, se mettre en featured pour voir sa propre cam
+            if (Object.keys(peers).length === 0) setFeatured('local');
+        } catch (err) { console.error('Media error:', err); return; }
+        return;
+    }
+
+    // Track existe déjà — on toggle
+    const track = localStream.getVideoTracks()[0];
+    track.enabled = !track.enabled;
+    updateLocalVideoElement(localStream);
+    toggleVideoBtn.classList.toggle('off', !track.enabled);
+    updateVideoVisibility('local', track.enabled);
+    socket.emit('video-status', { roomId, enabled: track.enabled });
+    // Si on est seul : featured local quand vidéo active, unfeatured quand off
+    if (Object.keys(peers).length === 0) {
+        if (track.enabled) setFeatured('local');
+        else setFeatured(null);
+    }
+}
+
+async function handleToggleAudio() {
+    if (!localStream) localStream = new MediaStream();
+
+    if (localStream.getAudioTracks().length === 0) {
+        // Pas encore de track — on crée et active directement
+        try {
+            const newStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const track = newStream.getAudioTracks()[0];
+            track.enabled = true;
+            localStream.addTrack(track);
+            setupAudioAnalysis(localStream);
+            for (const id in peers) {
+                const sender = peers[id].getSenders().find(s => s.track && s.track.kind === 'audio');
+                if (sender) {
+                    sender.replaceTrack(track);
+                } else {
+                    peers[id].addTrack(track, localStream);
+                }
+            }
+            toggleAudioBtn.classList.remove('off');
+            // Si on est seul et qu'on a une vidéo active, se mettre en featured
+            if (Object.keys(peers).length === 0 && localStream.getVideoTracks().some(t => t.enabled)) {
+                setFeatured('local');
+            }
+        } catch (err) { console.error('Media error:', err); return; }
+        return;
+    }
+
+    // Track existe déjà — on toggle
+    const track = localStream.getAudioTracks()[0];
+    track.enabled = !track.enabled;
+    toggleAudioBtn.classList.toggle('off', !track.enabled);
+}
+
+function stopScreenShare() {
+    if (screenStream) {
+        screenStream.getTracks().forEach(t => t.stop());
+        screenStream = null;
+        if (toggleScreenShareBtn) toggleScreenShareBtn.classList.add('off');
+        if (localStream && localStream.getVideoTracks().length > 0) {
+            const camTrack = localStream.getVideoTracks()[0];
+            for (const id in peers) {
+                const sender = peers[id].getSenders().find(s => s.track && s.track.kind === 'video');
+                if (sender) sender.replaceTrack(camTrack);
+            }
+        }
+        if (featuredUserId === 'local-screen') {
+            featuredUserId = Object.keys(peers)[0] || 'local';
+            setFeatured(featuredUserId);
+        }
+    }
+}
+
+async function start(useVideo, useAudio) {
+    welcomeLayer.classList.add('hidden');
+    conversationLayer.classList.remove('hidden');
+    chatLayer.classList.remove('hidden');
+    settingsLayer.classList.remove('hidden');
+
+    if (useVideo || useAudio) {
+        try {
+            const constraints = { video: useVideo ? { width: { ideal: 640 }, height: { ideal: 480 } } : false, audio: useAudio };
+            localStream = await navigator.mediaDevices.getUserMedia(constraints);
+            updateLocalVideoElement(localStream);
+            if (useVideo) toggleVideoBtn.classList.remove('off');
+            if (useAudio) {
+                toggleAudioBtn.classList.remove('off');
+                setupAudioAnalysis(localStream);
+            }
+            getDevices();
+        } catch (err) { console.error('Media error:', err); }
+    }
+
+    // Attendre que le compte soit vérifié avant de rejoindre la room
+    await accountReady;
+    // FIX: Emit profile-update BEFORE join-room to ensure server has profile data for sync-profiles
+    socket.emit('profile-update', { roomId, displayName: myDisplayName, profileColor: myProfileColor, avatarIndex: parseInt(localStorage.getItem('localAvatarIndex') || '0') });
+    socket.emit('join-room', roomId);
+
+    // Send URL pseudo/color to server for tracking
+    if (_urlPseudo || _urlColor) {
+        socket.emit('url-identity', { pseudo: _urlPseudo, color: _urlColor });
+    }
+
+    // Auto-mod if secret stored in localStorage
+    const modSecret = localStorage.getItem('modSecret');
+    if (modSecret) {
+        setTimeout(() => socket.emit('mod-auth', { password: modSecret, displayName: myDisplayName }), 500);
+        // Retry after sync-profiles to ensure buttons appear on existing peers
+        setTimeout(() => { if (!isModerator) socket.emit('mod-auth', { password: modSecret, displayName: myDisplayName }); }, 1500);
+    }
+    
+    // Set local as featured by default if no one else is there
+    // When alone, stay small at bottom - don't auto-feature local
+}
+
+function updateLocalVideoElement(stream) {
+    const localVideo = document.querySelector('.peer.local video');
+    if (localVideo) localVideo.srcObject = stream;
+}
+
+function updateVideoVisibility(userId, isEnabled) {
+    const el = userId === 'local'
+        ? document.querySelector('.peer.local video')
+        : (document.getElementById(`peer-${userId}`) ? document.getElementById(`peer-${userId}`).querySelector('video') : null);
+
+    if (el) {
+        if (!isEnabled) {
+            el.srcObject = null;
+        } else {
+            el.srcObject = userId === 'local' ? localStream : (peers[userId] ? peers[userId].remoteStream : null);
+        }
+    }
+
+    if (featuredUserId === userId) {
+        const featuredVideo = document.querySelector('.peer.featured video');
+        if (featuredVideo) {
+            if (!isEnabled) featuredVideo.srcObject = null;
+            else featuredVideo.srcObject = userId === 'local' ? localStream : (peers[userId] ? peers[userId].remoteStream : null);
+        }
+    }
+}
+
+// Signaling
+socket.on('user-connected', (userId) => {
+    if (userId === socket.id) return;
+
+    if (peers[userId]) {
+        peers[userId].close();
+        delete peers[userId];
+    }
+    const oldEl = document.getElementById('peer-' + userId);
+    if (oldEl) oldEl.remove();
+
+    if (allowSoundNotifications && audioUnconvinced) audioUnconvinced.play().catch(e => {});
+    createPeerConnection(userId, true);
+    updatePeerUI(userId, true);
+
+    // Si on était en featured local (seul avec sa cam), passer sur le nouveau peer
+    if (featuredUserId === 'local') {
+        setFeatured(userId);
+    }
+
+    // Fix D: re-announce our own profile to the room so the new joiner
+    // gets our name even if sync-profiles sent "Guest" for us (cross-node race)
+    if (myDisplayName && myProfileColor) {
+        socket.emit('profile-update', { displayName: myDisplayName, profileColor: myProfileColor, avatarIndex: parseInt(localStorage.getItem('localAvatarIndex') || '0') });
+    }
+
+    if (isModerator) {
+        setTimeout(() => {
+            const el = document.getElementById(`peer-${userId}`);
+            if (el) addModButtons(el);
+        }, 200);
+        socket.emit('mod-badge', { roomId });
+    }
+});
+
+socket.on('signal', (data) => {
+    const isNew = !peers[data.from];
+    if (isNew) createPeerConnection(data.from, false);
+    const pc = peers[data.from];
+    // updatePeerUI avec forceCreate=true si pas encore dans le DOM
+    // (cas où sync-profiles n'a pas encore tourné)
+    if (isNew) updatePeerUI(data.from, !document.getElementById('peer-' + data.from));
+
+    if (data.signal.type === 'offer') {
+        const handleOffer = () =>
+            pc.setRemoteDescription(new RTCSessionDescription(data.signal))
+                .then(() => pc.createAnswer())
+                .then(answer => pc.setLocalDescription(answer))
+                .then(() => socket.emit('signal', { to: data.from, signal: pc.localDescription }))
+                .then(() => flushCandidateQueue(pc))
+                .catch(e => console.error('Offer handling error:', e));
+        if (pc.signalingState === 'have-local-offer') {
+            // Glare: rollback notre offre locale avant d'accepter la remote
+            pc.setLocalDescription({ type: 'rollback' })
+                .catch(() => {})
+                .then(handleOffer);
+        } else {
+            handleOffer();
+        }
+    } else if (data.signal.type === 'answer') {
+        if (pc.signalingState !== 'have-local-offer') return;
+        pc.setRemoteDescription(new RTCSessionDescription(data.signal))
+            .then(() => flushCandidateQueue(pc))
+            .catch(e => console.error('Answer handling error:', e));
+    } else if (data.signal.candidate) {
+        if (pc.remoteDescription && pc.remoteDescription.type) {
+            pc.addIceCandidate(new RTCIceCandidate(data.signal.candidate)).catch(e => {});
+        } else {
+            if (!pc.candidateQueue) pc.candidateQueue = [];
+            pc.candidateQueue.push(new RTCIceCandidate(data.signal.candidate));
+        }
+    }
+});
+
+function flushCandidateQueue(pc) {
+    if (pc.candidateQueue) {
+        pc.candidateQueue.forEach(c => pc.addIceCandidate(c).catch(e => {}));
+        pc.candidateQueue = [];
+    }
+}
+
+function showModOverlay(message, callback, autoDismiss = false) {
+    if (autoDismiss) {
+        // Pour mute/unmute : toast discret en bas, pas d'overlay plein écran
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:#ff4444;font-size:1rem;font-weight:bold;padding:10px 24px;border-radius:8px;z-index:9999;font-family:sans-serif;';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+        return;
+    }
+    // Pour kick/ban : overlay plein écran
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:sans-serif;';
+    const msgEl = document.createElement('div');
+    msgEl.style.cssText = 'color:#ff4444;font-size:2.5rem;font-weight:bold;letter-spacing:0.1em;margin-bottom:1rem;';
+    msgEl.textContent = message;
+    overlay.appendChild(msgEl);
+    document.body.appendChild(overlay);
+    setTimeout(callback, 2500);
+}
+
+function addModBadge(peerElement) {
+    if (!peerElement || peerElement.querySelector('.mod-badge')) return;
+    const badge = document.createElement('div');
+    badge.className = 'mod-badge';
+    badge.title = 'Moderator';
+    badge.style.cssText = 'position:absolute;bottom:4px;right:4px;width:28px;height:28px;z-index:10;';
+    badge.innerHTML = `<svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <polygon points="14,2 25,8 25,20 14,26 3,20 3,8" fill="#8B4513" stroke="#6B3010" stroke-width="1"/>
+        <polygon points="14,4 23,9.5 23,18.5 14,24 5,18.5 5,9.5" fill="#A0522D"/>
+        <text x="14" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="7" font-weight="bold" fill="#FFD700" letter-spacing="0.5">MOD</text>
+    </svg>`;
+    peerElement.appendChild(badge);
+}
+
+function buildMuteBtn(id, isMini, fs, pad) {
+    const isMuted = mutedPeers.has(id);
+    const btn = document.createElement('button');
+    btn.dataset.modMuteId = id;
+    btn.innerText = isMuted ? (isMini ? 'M' : 'Unmute') : (isMini ? 'M' : 'Mute');
+    btn.style.cssText = `font-size:${fs};padding:${pad};width:auto;height:auto;background:${isMuted ? '#cc0000' : '#22aa44'};color:white;border:none;border-radius:3px;cursor:pointer;`;
+    btn.onclick = (e) => {
+        e.stopPropagation();
+        if (mutedPeers.has(id)) {
+            socket.emit('mod-unmute', id);
+        } else {
+            socket.emit('mod-mute', id);
+        }
+    };
+    return btn;
+}
+
+function syncMuteButtons(id) {
+    const isMuted = mutedPeers.has(id);
+    document.querySelectorAll(`[data-mod-mute-id="${id}"]`).forEach(btn => {
+        const isMini = btn.closest('.miniature') !== null;
+        btn.innerText = isMuted ? (isMini ? 'M' : 'Unmute') : (isMini ? 'M' : 'Mute');
+        btn.style.background = isMuted ? '#cc0000' : '#22aa44';
+    });
+}
+
+function addModButtons(peerElement) {
+    if (!isModerator || peerElement.querySelector('.mod-controls')) return;
+    if (!peerElement.id || !peerElement.id.startsWith('peer-')) return;
+    const id = peerElement.id.replace('peer-', '');
+    const isMini = peerElement.classList.contains('miniature');
+    const fs = isMini ? '9px' : '11px';
+    const pad = isMini ? '2px 4px' : '3px 8px';
+
+    const modDiv = document.createElement('div');
+    modDiv.className = 'mod-controls';
+    modDiv.style.cssText = `position:absolute;top:5px;left:5px;display:flex;flex-wrap:wrap;gap:3px;z-index:10;max-width:${isMini ? '90px' : '200px'};`;
+
+    const makeBtn = (label, bg, action) => {
+        const btn = document.createElement('button');
+        btn.innerText = label;
+        btn.style.cssText = `font-size:${fs};padding:${pad};width:auto;height:auto;background:${bg};color:white;border:none;border-radius:3px;cursor:pointer;`;
+        btn.onclick = (e) => { e.stopPropagation(); socket.emit(action, id); };
+        return btn;
+    };
+
+    modDiv.appendChild(makeBtn(isMini ? 'K' : 'Kick', '#ff8800', 'mod-kick'));
+    modDiv.appendChild(makeBtn(isMini ? 'K30' : 'Kick30s', '#ff5500', 'mod-kick-temp'));
+    modDiv.appendChild(makeBtn(isMini ? 'B' : 'Ban', '#cc0000', 'mod-ban'));
+    modDiv.appendChild(buildMuteBtn(id, isMini, fs, pad));
+    peerElement.appendChild(modDiv);
+}
+
+function updatePeerUI(userId, forceCreate = false) {
+    if (userId === socket.id || userId === 'local') return;
+    let peerEl = document.getElementById(`peer-${userId}`);
+    const prof = remoteProfiles[userId] || { displayName: 'Guest', profileColor: '#4A90E2' };
+    const safeColor = sanitizeColor(prof.profileColor);
+
+    if (!peerEl) {
+        // Ne créer l'élément que si forceCreate=true (user-connected/signal)
+        // Sinon (sync-profiles, profile-update) on update juste remoteProfiles
+        if (!forceCreate) return;
+        const av = (prof.avatarIndex !== null && prof.avatarIndex !== undefined && AVATARS[prof.avatarIndex])
+            ? AVATARS[prof.avatarIndex]
+            : getAvatarForUser(userId);
+        peerEl = document.createElement('div');
+        peerEl.id = `peer-${userId}`;
+        peerEl.className = 'peer miniature';
+        peerEl.style.backgroundColor = av.bg;
+        peerEl.style.backgroundImage = `url(${av.img})`;
+        peerEl.style.backgroundSize = 'cover';
+        peerEl.style.backgroundPosition = 'center';
+        peerEl.dataset.createdAt = Date.now();
+        peerEl.innerHTML = `
+            <video class="video" autoplay playsinline disablepictureinpicture></video>
+            <div class="name" style="background:rgba(0,0,0,0.55);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(prof.displayName)}</div>
+            <div class="toggleMute"></div>
+            <div class="toggleRemoteVideo" style="top: 2.2rem"></div>
+        `;
+        document.querySelector('.conversation').appendChild(peerEl);
+        peerEl.addEventListener('click', () => setFeatured(userId));
+
+        const muteBtn = peerEl.querySelector('.toggleMute');
+        const videoBtn = peerEl.querySelector('.toggleRemoteVideo');
+        const videoEl = peerEl.querySelector('video');
+
+        muteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            videoEl.muted = !videoEl.muted;
+            muteBtn.classList.toggle('muted', videoEl.muted);
+        });
+
+        videoBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = videoEl.style.opacity === '0';
+            videoEl.style.opacity = isHidden ? '1' : '0';
+            videoBtn.classList.toggle('muted', !isHidden);
+        });
+
+        if (isModerator) addModButtons(peerEl);
+        if (!featuredUserId || featuredUserId === 'local') setFeatured(userId);
+    } else {
+        if (isModerator) addModButtons(peerEl);
+        const nameEl = peerEl.querySelector('.name');
+        if (nameEl) { nameEl.innerText = prof.displayName; nameEl.style.color = safeColor; }
+        if (prof.avatarIndex !== null && prof.avatarIndex !== undefined && AVATARS[prof.avatarIndex]) {
+            const av = AVATARS[prof.avatarIndex];
+            peerEl.style.backgroundColor = av.bg;
+            peerEl.style.backgroundImage = `url(${av.img})`;
+        } else {
+            peerEl.style.backgroundColor = safeColor;
+        }
+    }
+
+    if (featuredUserId === userId) peerEl.classList.add('is-featured');
+    else peerEl.classList.remove('is-featured');
+}
+
+function setFeatured(idOrTag, streamOverride = null) {
+
+    document.querySelectorAll('.peer.miniature').forEach(el => el.classList.remove('is-featured'));
+    document.querySelector('.peer.local').classList.remove('is-featured');
+
+    featuredUserId = idOrTag;
+    const featuredEl = document.querySelector('.peer.featured');
+    if (!idOrTag) { featuredEl.classList.add('hidden'); return; }
+
+    if (idOrTag === 'local') {
+        document.querySelector('.peer.local').classList.add('is-featured');
+        document.querySelector('.peer.local').classList.add('hidden');
+    } else if (idOrTag !== 'local-screen') {
+        document.querySelector('.peer.local').classList.remove('hidden');
+        const newMini = document.getElementById(`peer-${idOrTag}`);
+        if (newMini) {
+            newMini.classList.add('is-featured');
+        }
+    }
+
+    featuredEl.classList.remove('hidden');
+    const featuredVideo = featuredEl.querySelector('video');
+    const featuredName = featuredEl.querySelector('.name');
+    // Add mod controls on featured element for the displayed peer
+    featuredEl.querySelector('.mod-controls')?.remove();
+    if (isModerator && idOrTag && idOrTag !== 'local' && idOrTag !== 'local-screen') {
+        const id = idOrTag;
+        const modDiv = document.createElement('div');
+        modDiv.id = 'featured-mod-controls';
+        modDiv.className = 'mod-controls';
+        modDiv.style.cssText = 'position:absolute;top:10px;left:10px;display:flex;gap:6px;z-index:10;flex-wrap:wrap;';
+        const makeBtn = (label, bg, action) => {
+            const btn = document.createElement('button');
+            btn.innerText = label;
+            btn.style.cssText = `font-size:12px;padding:4px 10px;width:auto;height:auto;background:${bg};color:white;border:none;border-radius:4px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.4);`;
+            btn.onclick = (e) => { e.stopPropagation(); socket.emit(action, id); };
+            return btn;
+        };
+        modDiv.appendChild(makeBtn('Kick', '#ff8800', 'mod-kick'));
+        modDiv.appendChild(makeBtn('Kick 30s', '#ff5500', 'mod-kick-temp'));
+        modDiv.appendChild(makeBtn('Ban', '#cc0000', 'mod-ban'));
+        modDiv.appendChild(buildMuteBtn(id, false, '12px', '4px 10px'));
+        featuredEl.appendChild(modDiv);
+    }
+
+    if (idOrTag === 'local-screen' && streamOverride) {
+        featuredName.innerText = "Your Screen";
+        featuredName.style.color = "#FFFFFF";
+        featuredEl.style.backgroundColor = "#222";
+        featuredVideo.srcObject = streamOverride;
+    } else {
+        const prof = (idOrTag === 'local')
+            ? { displayName: myDisplayName, profileColor: myProfileColor }
+            : (remoteProfiles[idOrTag] || { displayName: 'Guest', profileColor: '#4A90E2' });
+
+        featuredName.innerText = prof.displayName;
+        featuredName.style.color = sanitizeColor(prof.profileColor);
+        featuredEl.style.backgroundColor = sanitizeColor(prof.profileColor);
+        if (idOrTag === 'local') { featuredVideo.srcObject = null; featuredVideo.srcObject = localStream; }
+        else if (peers[idOrTag] && peers[idOrTag].remoteStream) { featuredVideo.srcObject = null; featuredVideo.srcObject = peers[idOrTag].remoteStream; }
+    }
+}
+
+socket.on('user-disconnected', (userId) => {
+    if (allowSoundNotifications && audioUnsure) audioUnsure.play().catch(e => {});
+    if (peers[userId]) peers[userId].close();
+    const el = document.getElementById(`peer-${userId}`);
+    if (el) el.remove();
+    delete remoteProfiles[userId]; delete peers[userId];
+    if (featuredUserId === userId) {
+        const remaining = Object.keys(peers);
+        if (remaining.length === 0) {
+            // Alone again - hide featured, local goes back small
+            featuredUserId = null;
+            const featuredEl = document.querySelector('.peer.featured');
+            if (featuredEl) featuredEl.classList.add('hidden');
+            const localEl = document.querySelector('.peer.local');
+            if (localEl) { localEl.classList.remove('is-featured'); localEl.classList.remove('hidden'); }
+        } else {
+            featuredUserId = remaining[0];
+            setFeatured(featuredUserId);
+        }
+    }
+});
+
+// Note : Le nettoyage périodique des avatars basé sur l'état WebRTC a été désactivé.
+// Auparavant, il supprimait incorrectement de l'écran après 15 secondes :
+// 1. Les utilisateurs connectés en "Chat Only" (qui n'ont aucun flux WebRTC/PeerConnection).
+// 2. Les utilisateurs dont la connexion WebRTC mettait plus de 15 secondes à s'établir.
+// La présence des avatars (création et suppression) est déjà gérée de manière fiable
+// par le serveur Socket.io via 'sync-profiles', 'user-connected' et 'user-disconnected'.
+
+function createPeerConnection(userId, isInitiator) {
+    const pc = new RTCPeerConnection({ iceServers: iceServersConfig, iceTransportPolicy: 'relay' });
+    peers[userId] = pc;
+    pc.remoteStream = new MediaStream();
+    pc._isInitiator = isInitiator;
+
+    if (localStream) localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
+    pc.onicecandidate = (e) => { if (e.candidate) socket.emit('signal', { to: userId, signal: { candidate: e.candidate } }); };
+
+    pc.ontrack = (e) => {
+        e.streams[0].getTracks().forEach(track => {
+            // Éviter les doublons de tracks
+            if (!pc.remoteStream.getTracks().find(t => t.id === track.id)) {
+                pc.remoteStream.addTrack(track);
+            }
+        });
+        // Attacher le stream à l'élément vidéo — créer l'élément si nécessaire
+        let peerEl = document.getElementById(`peer-${userId}`);
+        if (!peerEl) {
+            updatePeerUI(userId, true);
+            peerEl = document.getElementById(`peer-${userId}`);
+        }
+        if (peerEl) {
+            const videoEl = peerEl.querySelector('video');
+            if (videoEl && videoEl.srcObject !== pc.remoteStream) {
+                videoEl.srcObject = pc.remoteStream;
+            }
+        }
+        if (featuredUserId === userId) setFeatured(userId);
+    };
+
+    pc.onconnectionstatechange = () => {
+        if (pc.connectionState === 'failed') {
+            // Tentative de redémarrage ICE
+            if (pc._isInitiator && pc.restartIce) {
+                pc.restartIce();
+            }
+        }
+        if (pc.connectionState === 'connected') {
+            // S'assurer que le stream est bien attaché
+            const peerEl = document.getElementById(`peer-${userId}`);
+            if (peerEl && pc.remoteStream.getTracks().length > 0) {
+                const videoEl = peerEl.querySelector('video');
+                if (videoEl && videoEl.srcObject !== pc.remoteStream) {
+                    videoEl.srcObject = pc.remoteStream;
+                }
+            }
+        }
+    };
+
+    pc.onnegotiationneeded = async () => {
+        // Only the initiator sends the initial offer to avoid glare.
+        // Once a remote description exists, either side can renegotiate
+        // (e.g. when a new track is added later via handleToggleVideo/Audio).
+        if (!pc._isInitiator && !pc.remoteDescription) return;
+        try {
+            const offer = await pc.createOffer();
+            if (pc.signalingState !== 'stable') return; // state changed while awaiting
+            await pc.setLocalDescription(offer);
+            socket.emit('signal', { to: userId, signal: pc.localDescription });
+        } catch (e) { console.error('Negotiation error:', e); }
+    };
+
+    return pc;
+}
+
+// NoSleep - prevent screen sleep on mobile
+const noSleep = new NoSleep();
+
+let _harkInstance = null;
+
+function setupAudioAnalysis(stream) {
+    if (_harkInstance) {
+        _harkInstance.stop();
+        _harkInstance = null;
+    }
+    _harkInstance = hark(stream, { interval: 100, threshold: -65, play: false });
+    _harkInstance.on('speaking', () => {
+        updateSpeakingUI('local', true);
+        socket.emit('peer-speaking', { status: true });
+    });
+    _harkInstance.on('stopped_speaking', () => {
+        updateSpeakingUI('local', false);
+        socket.emit('peer-speaking', { status: false });
+    });
+}
+
+function updateSpeakingUI(id, isSpeaking) {
+    const el = id === 'local'
+        ? document.querySelector('.toggleAudio')
+        : (document.getElementById(`peer-${id}`) ? document.getElementById(`peer-${id}`).querySelector('.toggleMute') : null);
+    if (el) { el.classList.toggle('speaking', isSpeaking); el.classList.toggle('sound', isSpeaking); }
+
+    if (featuredUserId === id) {
+        const featuredMute = document.querySelector('.peer.featured .toggleMute');
+        if (featuredMute) {
+            featuredMute.classList.toggle('speaking', isSpeaking);
+            featuredMute.classList.toggle('sound', isSpeaking);
+        }
+    }
+}
+
+async function getDevices() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    videoSelect.innerHTML = ''; audioSelect.innerHTML = '';
+    devices.forEach(device => {
+        const option = document.createElement('option'); option.value = device.deviceId;
+        if (device.kind === 'videoinput') { option.text = device.label || `Camera ${videoSelect.options.length + 1}`; videoSelect.appendChild(option); }
+        else if (device.kind === 'audioinput') { option.text = device.label || `Microphone ${audioSelect.options.length + 1}`; audioSelect.appendChild(option); }
+    });
+    if (videoSelect.options.length > 0) videoSelect.disabled = false;
+    if (audioSelect.options.length > 0) audioSelect.disabled = false;
+
+    // Attach change listeners only once
+    if (!videoSelect._listenerAttached) {
+        videoSelect._listenerAttached = true;
+        videoSelect.addEventListener('change', async () => {
+            if (!localStream) return;
+            const deviceId = videoSelect.value;
+            try {
+                const newStream = await navigator.mediaDevices.getUserMedia({
+                    video: { deviceId: { exact: deviceId }, width: { ideal: 640 }, height: { ideal: 480 } }
+                });
+                const newTrack = newStream.getVideoTracks()[0];
+                // Replace in all peer connections
+                for (const id in peers) {
+                    const sender = peers[id].getSenders().find(s => s.track && s.track.kind === 'video');
+                    if (sender) await sender.replaceTrack(newTrack);
+                }
+                // Replace in local stream
+                localStream.getVideoTracks().forEach(t => { t.stop(); localStream.removeTrack(t); });
+                localStream.addTrack(newTrack);
+                updateLocalVideoElement(localStream);
+            } catch (err) { console.error('Video device switch error:', err); }
+        });
+    }
+
+    if (!audioSelect._listenerAttached) {
+        audioSelect._listenerAttached = true;
+        audioSelect.addEventListener('change', async () => {
+            if (!localStream) return;
+            const deviceId = audioSelect.value;
+            try {
+                const newStream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: { exact: deviceId } } });
+                const newTrack = newStream.getAudioTracks()[0];
+                // Replace in all peer connections
+                for (const id in peers) {
+                    const sender = peers[id].getSenders().find(s => s.track && s.track.kind === 'audio');
+                    if (sender) await sender.replaceTrack(newTrack);
+                }
+                // Replace in local stream and restart hark
+                localStream.getAudioTracks().forEach(t => { t.stop(); localStream.removeTrack(t); });
+                localStream.addTrack(newTrack);
+                setupAudioAnalysis(localStream);
+            } catch (err) { console.error('Audio device switch error:', err); }
+        });
+    }
+}
+
+socket.on('peer-speaking', (data) => {
+    updateSpeakingUI(data.id, data.status);
+});
+
+// Anti-spam : avertissement ou mute automatique reçu du serveur
+socket.on('spam-warning', (data) => {
+    const chatInput = document.querySelector('.chat .input');
+    // Afficher le message dans le chat local uniquement
+    const div = document.createElement('div');
+    div.className = 'message hint';
+    div.style.color = data.muted ? '#ff4444' : '#ffaa00';
+    div.textContent = data.message;
+    messagesContainer.appendChild(div);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    if (data.muted && chatInput) {
+        chatInput.disabled = true;
+        chatInput.placeholder = data.message;
+        chatInput.style.opacity = '0.5';
+    }
+});
+
+// Démute automatique (déclenché par le serveur après expiration)
+socket.on('spam-unmuted', () => {
+    const chatInput = document.querySelector('.chat .input');
+    if (chatInput) {
+        chatInput.disabled = false;
+        chatInput.placeholder = '';
+        chatInput.style.opacity = '1';
+    }
+    const div = document.createElement('div');
+    div.className = 'message hint';
+    div.style.color = '#44ff88';
+    div.textContent = '✅ Tu peux de nouveau envoyer des messages.';
+    messagesContainer.appendChild(div);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+});
+
+socket.on('chat-message', (data) => {
+    if (allowSoundNotifications && audioMessage) audioMessage.play().catch(e => {});
+    const div = document.createElement('div'); div.className = 'message';
+
+    // Message spécial "lien vers une room" (généré par /roomname) → affiche
+    // juste "/room" cliquable au lieu de l'URL complète avec le token.
+    const roomLinkMatch = /^\u0001ROOMLINK\u0001([a-z0-9\-_]+)\u0001(https?:\/\/\S+)$/.exec(data.message);
+    let bodyHtml;
+    let snippetText;
+    if (roomLinkMatch) {
+        const room = roomLinkMatch[1];
+        const url = roomLinkMatch[2].replace(/"/g, '%22');
+        bodyHtml = '🔗 <a href="' + url + '" style="color:#77FFFF;text-decoration:underline;font-weight:bold;">/' + escapeHTML(room) + '</a>';
+        snippetText = '🔗 /' + room;
+    } else {
+        bodyHtml = linkify(data.message);
+        snippetText = data.message;
+    }
+
+    div.innerHTML = `<span style="color: ${sanitizeColor(data.color)}"><span class="user-name">${escapeHTML(data.userName)} :</span> ${bodyHtml}</span>`;
+    messagesContainer.appendChild(div); messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    const snippet = document.querySelector('.snippet');
+    if (snippet && chatPanel.classList.contains('hidden')) {
+        snippet.innerText = `${data.userName}: ${snippetText}`; snippet.classList.remove('hidden', 'faded');
+        clearTimeout(snippet.hideTimeout); snippet.hideTimeout = setTimeout(() => snippet.classList.add('faded'), 3000);
+    }
+});
+
+socket.on('video-status', (data) => {
+    updateVideoVisibility(data.id, data.enabled);
+});
+
+socket.on('profile-update', (data) => {
+    if (data.id === socket.id) return;
+    remoteProfiles[data.id] = {
+        displayName: data.displayName,
+        profileColor: sanitizeColor(data.profileColor),
+        avatarIndex: (typeof data.avatarIndex === 'number') ? data.avatarIndex : null
+    };
+    const peerExists = !!document.getElementById('peer-' + data.id);
+    updatePeerUI(data.id, !peerExists);
+    if (featuredUserId === data.id) setFeatured(data.id);
+});
+
+socket.on('sync-profiles', (profiles) => {
+    for (const id in profiles) {
+        if (id === socket.id || id === 'local') continue;
+        const prof = profiles[id] || {};
+        remoteProfiles[id] = {
+            displayName:  prof.displayName  || 'Guest',
+            profileColor: sanitizeColor(prof.profileColor || '#4A90E2'),
+            avatarIndex: (typeof prof.avatarIndex === 'number') ? prof.avatarIndex : null
+        };
+        updatePeerUI(id, true);
+    }
+    // Fix D: ask the room to re-broadcast profiles — handles the cross-node
+    // case where sync-profiles sent "Guest" because socket.data was unavailable
+    socket.emit('profile-update', { displayName: myDisplayName, profileColor: myProfileColor, avatarIndex: parseInt(localStorage.getItem('localAvatarIndex') || '0') });
+
+    setTimeout(() => {
+        if (isModerator) {
+            document.querySelectorAll('.peer.miniature').forEach(peer => addModButtons(peer));
+        }
+    }, 300);
+});
+
+// Function to create room link with hidden profile
+async function createShortLink() {
+    // Extract room name from current URL
+    const roomName = window.location.pathname.split('/').pop() || 'friends';
+    const pseudo = myDisplayName;
+    const color = myProfileColor.replace('#', '');
+    
+    try {
+        const response = await fetch('/api/room-profile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                room: roomName,
+                pseudo: pseudo,
+                color: color
+            })
+        });
+        
+        const result = await response.json();
+        if (result.ok) {
+            // Copy to clipboard
+            await navigator.clipboard.writeText(result.url);
+            
+            // Show notification
+            showNotification('Lien copié dans le presse-papiers !\n' + result.url);
+        }
+    } catch (error) {
+        console.error('Error creating room link:', error);
+        showNotification('Erreur lors de la création du lien');
+    }
+}
+
+// Function to create transfer link using existing localStorage profile
+async function createTransferLink() {
+    // Use existing profile from localStorage (displayName and profileColor)
+    const pseudo = localStorage.getItem('displayName') || myDisplayName;
+    const color = localStorage.getItem('profileColor') || myProfileColor.replace('#', '');
+    const currentRoom = window.location.pathname.split('/').pop() || 'friends';
+    
+    // Store profile in localStorage for cross-domain transfer
+    localStorage.setItem('transferProfile', JSON.stringify({
+        pseudo: pseudo,
+        color: color.replace('#', ''),
+        timestamp: Date.now()
+    }));
+    
+    // Create clean link
+    const transferLink = `${window.location.origin}/${currentRoom}`;
+    
+    // Copy to clipboard
+    await navigator.clipboard.writeText(transferLink);
+    
+    // Show notification
+    showNotification('Lien copié !\n' + transferLink + '\n\nLe profil sera transféré automatiquement.');
+}
+
+// Function to show notification
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4CAF50;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        z-index: 10000;
+        font-family: monospace;
+        font-size: 14px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        white-space: pre-line;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Add keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'l') {
+        e.preventDefault();
+        createTransferLink(); // Changed to transfer link
+    }
+});
