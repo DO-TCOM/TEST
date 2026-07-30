@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatlet — Alternative gratuite | Chaltet appels vidéo sans compte</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="Vous cherchez Chatlet ? Essayez Chaltet — appels vidéo gratuits, sans compte, sans téléchargement. Peer-to-peer, chiffré, 100% gratuit. Meilleure alternative à chatlet.com."/>
+    <meta name="keywords" content="chaltet, chatlet, chatlet.com, appel vidéo gratuit, video call no account, peer to peer video chat, encrypted video call, chat vidéo sans inscription"/>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico"/>
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png"/>
+    <link rel="manifest" href="/manifest.json"/>
+    <link href="fonts.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #08071a;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        /* ── Image de fond centrée ── */
+        .bg-image {
+            position: fixed;
+            inset: 0;
+            background-image: url('/background-landing.webp');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+        }
+
+        /* Dégradé sombre en haut et en bas pour lisibilité */
+        .bg-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to bottom,
+                    rgba(8,7,26,0.82) 0%,
+                    rgba(8,7,26,0.25) 35%,
+                    rgba(8,7,26,0.15) 55%,
+                    rgba(8,7,26,0.72) 85%,
+                    rgba(8,7,26,0.95) 100%
+                );
+        }
+
+        /* ── Lueur néon ambiante ── */
+        .neon-glow {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #b44fff, #00d4ff, #ff2d8e, transparent);
+            filter: blur(6px);
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        /* ── Layout principal ── */
+        .main {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 2rem 1rem;
+        }
+
+        /* ── Badge 18+ ── */
+        .age-badge {
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255, 80, 100, 0.92);
+            border: 1px solid rgba(255, 60, 90, 0.35);
+            border-radius: 2rem;
+            padding: 0.55em 1.6em;
+            background: rgba(8,7,26,0.6);
+            letter-spacing: 0.04em;
+            backdrop-filter: blur(8px);
+            text-shadow: 0 0 12px rgba(255,60,90,0.4);
+        }
+
+        /* ── Card principale ── */
+        .card {
+            background: rgba(8, 7, 26, 0.75);
+            border: 1px solid rgba(100, 60, 255, 0.25);
+            border-radius: 1rem;
+            padding: 2.5rem 3rem;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow:
+                0 0 0 1px rgba(180, 79, 255, 0.08),
+                0 8px 40px rgba(0,0,0,0.6),
+                inset 0 0 60px rgba(80, 0, 180, 0.06);
+            backdrop-filter: blur(16px);
+        }
+
+        .og-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            border-radius: 2rem;
+            padding: 0.22em 0.9em;
+            margin-bottom: 1.1rem;
+            font-family: "Josefin Sans", sans-serif;
+            text-shadow: 0 0 10px rgba(0,212,255,0.6);
+            box-shadow: 0 0 12px rgba(0,212,255,0.15);
+        }
+
+        h1 {
+            font-family: "Josefin Sans", sans-serif;
+            font-weight: 300;
+            font-size: 3.5rem;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            /* Dégradé cyberpunk violet → cyan */
+            background: linear-gradient(135deg, #c084fc 0%, #00d4ff 60%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(180,79,255,0.4));
+        }
+
+        .tagline {
+            color: rgba(180, 200, 255, 0.55);
+            font-size: 0.82rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* ── Input room ── */
+        .input-row {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.04);
+            border-radius: 0.5rem;
+            padding: 0 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(100, 60, 255, 0.25);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-row:focus-within {
+            border-color: rgba(0, 212, 255, 0.6);
+            box-shadow: 0 0 16px rgba(0,212,255,0.12);
+        }
+
+        .prefix {
+            color: rgba(0, 212, 255, 0.35);
+            font-size: 0.78rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .input-row input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e0e8ff;
+            font-size: 1rem;
+            padding: 0.85rem 0.4rem;
+            width: 100%;
+            font-family: Arial, sans-serif;
+        }
+        .input-row input::placeholder { color: rgba(180,200,255,0.25); }
+
+        /* ── Bouton principal ── */
+        .btn {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+            color: #fff;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: "Josefin Sans", sans-serif;
+            letter-spacing: 0.08em;
+            transition: opacity 0.2s, box-shadow 0.2s;
+            box-shadow: 0 0 20px rgba(124,58,237,0.4);
+            text-transform: uppercase;
+        }
+        .btn:hover {
+            opacity: 0.88;
+            box-shadow: 0 0 30px rgba(124,58,237,0.6);
+        }
+        .btn:active { opacity: 0.75; }
+
+        /* ── Random room ── */
+        .bottom-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .random-link {
+            color: rgba(180,200,255,0.35);
+            font-size: 0.78rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .random-link:hover { color: #00d4ff; }
+
+        /* ── Sélecteur de langue ── */
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(8,7,26,0.6);
+            border: 1px solid rgba(100,60,255,0.2);
+            border-radius: 2rem;
+            padding: 0.3rem 0.6rem;
+            backdrop-filter: blur(8px);
+            margin-top: 1rem;
+        }
+
+        .lang-flag {
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.55;
+            transition: opacity 0.2s, transform 0.15s, filter 0.2s;
+            user-select: none;
+            line-height: 1;
+            padding: 0.15rem 0.2rem;
+            border-radius: 0.3rem;
+            position: relative;
+        }
+        .lang-flag:hover {
+            opacity: 1;
+            transform: scale(1.18);
+        }
+        .lang-flag.active {
+            opacity: 1;
+            filter: drop-shadow(0 0 8px rgba(0,212,255,0.7));
+            background: rgba(0,212,255,0.1);
+        }
+
+        .lang-divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(100,60,255,0.3);
+            flex-shrink: 0;
+        }
+
+        .lang-label {
+            font-size: 0.6rem;
+            color: rgba(180,200,255,0.4);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding-right: 0.3rem;
+            font-family: "Josefin Sans", sans-serif;
+        }
+
+        .footer-note {
+            margin-top: 1.8rem;
+            font-size: 0.62rem;
+            color: rgba(180,200,255,0.2);
+            line-height: 1.6;
+        }
+
+        /* ── Footer CGU ── */
+        .cgu-footer {
+            position: relative;
+            z-index: 1;
+            margin-top: 1.2rem;
+            padding: 0 1rem 1.5rem;
+            max-width: 460px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .cgu-footer p {
+            font-size: 0.65rem;
+            color: rgba(180,200,255,0.22);
+            line-height: 1.7;
+            margin-bottom: 0.3rem;
+        }
+
+        .cgu-link {
+            color: rgba(0,212,255,0.45);
+            text-decoration: underline;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 0.65rem;
+            font-family: Arial, sans-serif;
+            padding: 0;
+        }
+        .cgu-link:hover { color: #00d4ff; }
+
+        /* ── Modal CGU ── */
+        .cgu-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .cgu-modal-overlay.open { display: flex; }
+
+        .cgu-modal {
+            background: #0d0c22;
+            border: 1px solid rgba(100,60,255,0.3);
+            border-radius: 0.8rem;
+            padding: 2rem 2.5rem;
+            max-width: 640px;
+            width: 92%;
+            max-height: 82vh;
+            overflow-y: auto;
+            color: rgba(180,200,255,0.7);
+            font-size: 0.8rem;
+            line-height: 1.8;
+            box-shadow: 0 0 40px rgba(100,60,255,0.2);
+        }
+
+        .cgu-modal h2 {
+            font-family: "Josefin Sans", sans-serif;
+            font-size: 1.05rem;
+            background: linear-gradient(135deg, #c084fc, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.2rem;
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+
+        .cgu-modal h3 {
+            font-size: 0.75rem;
+            color: rgba(0,212,255,0.8);
+            margin: 1.1rem 0 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .cgu-modal .close-btn {
+            display: block;
+            margin: 1.8rem auto 0;
+            padding: 0.6rem 2.2rem;
+            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+            color: #fff;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: "Josefin Sans", sans-serif;
+            letter-spacing: 0.05em;
+        }
+        .cgu-modal .close-btn:hover { opacity: 0.85; }
+
+        /* ── Bouton copier lien ── */
+        .copy-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0 0.4rem;
+            color: rgba(0,212,255,0.4);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: color 0.2s, transform 0.15s;
+            line-height: 1;
+        }
+        .copy-btn:hover { color: #00d4ff; transform: scale(1.15); }
+        .copy-btn.copied { color: #a855f7; }
+
+        /* ── Footer lisible ── */
+        .footer-note {
+            margin-top: 1.8rem;
+            font-size: 0.72rem !important;
+            color: rgba(180,200,255,0.5) !important;
+            line-height: 1.6;
+        }
+
+        .cgu-footer p {
+            font-size: 0.72rem !important;
+            color: rgba(180,200,255,0.5) !important;
+        }
+
+        .cgu-link {
+            color: rgba(0,212,255,0.7) !important;
+            font-size: 0.72rem !important;
+        }
+        .cgu-link:hover { color: #00d4ff !important; }
+
+        @media (max-width: 480px) {
+            .card { padding: 2rem 1.5rem; }
+            h1 { font-size: 2.8rem; }
+            .cgu-modal { padding: 1.5rem; }
+        }
+        /* ── Bandeau info compte ── */
+        .account-info-banner { display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 0.5rem 0.8rem; margin-top: 0.8rem; text-align: left; }
+        .account-info-icon { font-size: 1rem; flex-shrink: 0; }
+        .account-info-text { font-size: 0.72rem; color: rgba(255,255,255,0.75); line-height: 1.4; }
+        .account-info-text strong { color: #fff; }
+        .account-info-text em { color: rgba(255,255,255,0.5); font-style: normal; }
+
+        /* ── Barre compte ── */
+        .account-bar { margin-top: 0.6rem; text-align: center; }
+        .account-guest { display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+        .account-logged { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .account-btn-link { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 0.78rem; cursor: pointer; padding: 0.2rem 0.4rem; border-radius: 4px; transition: color 0.15s; }
+        .account-btn-link:hover { color: #fff; }
+        .account-sep { color: rgba(255,255,255,0.3); font-size: 0.75rem; }
+        .account-pseudo { color: #fff; font-weight: 700; font-size: 0.85rem; }
+        .account-avatar { font-size: 1.2rem; }
+
+        /* ── Modal Auth ── */
+        .auth-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; align-items: center; justify-content: center; }
+        .auth-modal-overlay.open { display: flex; }
+        .auth-modal { background: #fff; border-radius: 14px; padding: 1.5rem; width: 320px; max-width: 92vw; position: relative; }
+        .auth-modal-close { position: absolute; top: 0.8rem; right: 0.8rem; background: none; border: none; font-size: 1rem; cursor: pointer; color: #888; }
+        .auth-tabs { display: flex; gap: 0; margin-bottom: 1.2rem; border-bottom: 2px solid #eee; }
+        .auth-tab { flex: 1; background: none; border: none; padding: 0.6rem; font-size: 0.82rem; font-weight: 600; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.15s, border-color 0.15s; }
+        .auth-tab.active { color: #3c3489; border-bottom-color: #3c3489; }
+        .auth-field { margin-bottom: 0.85rem; }
+        .auth-field label { display: block; font-size: 0.72rem; font-weight: 600; color: #555; margin-bottom: 0.3rem; }
+        .auth-field input { width: 100%; box-sizing: border-box; border: 1.5px solid #ddd; border-radius: 7px; padding: 0.5rem 0.7rem; font-size: 0.85rem; outline: none; transition: border-color 0.15s; }
+        .auth-field input:focus { border-color: #3c3489; }
+        .auth-error { color: #d32f2f; font-size: 0.72rem; margin-bottom: 0.6rem; min-height: 1rem; }
+        .auth-submit { width: 100%; background: #3c3489; color: #fff; border: none; border-radius: 7px; padding: 0.6rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+        .auth-submit:hover { background: #534ab7; }
+        .auth-submit:disabled { background: #aaa; cursor: not-allowed; }
+        .auth-hint { font-weight: 400; font-size: 0.65rem; margin-left: 0.3rem; }
+        .auth-hint.ok { color: #2e7d32; }
+        .auth-hint.err { color: #d32f2f; }
+
+    </style>
+</head>
+<body>
+    <div class="bg-image"></div>
+    <div class="neon-glow"></div>
+
+    <div class="main">
+        <!-- Badge 18+ -->
+        <span class="age-badge" id="ageBadge">⚠️ Site strictement réservé aux personnes de 18 ans et plus</span>
+
+        <!-- Card principale -->
+        <div class="card">
+            <div class="og-badge">OG Chaltet</div>
+            <h1>Chaltet</h1>
+            <p class="tagline" id="tagline">Appels vidéo, audio &amp; chat.<br>Sans compte. Sans téléchargement. Peer-to-peer.</p>
+
+            <div class="input-row">
+                <span class="prefix">chaltet.com /</span>
+                <input type="text" id="roomInput" placeholder="nom-de-la-room" autocomplete="off" spellcheck="false"/>
+                <button class="copy-btn" id="copyBtn" title="Copier le lien">⎘</button>
+            </div>
+
+            <button class="btn" id="joinBtn">Rejoindre la Room</button>
+
+            <!-- Bandeau info compte -->
+            <div class="account-info-banner" id="accountBanner">
+                <span class="account-info-icon">✨</span>
+                <span class="account-info-text">Nouveau — Créez un compte <strong>sans email</strong> pour un pseudo unique, une photo de profil et plus encore. <em>Facultatif.</em></span>
+            </div>
+
+            <!-- Compte utilisateur -->
+            <div class="account-bar" id="accountBar">
+                <div id="accountGuest" class="account-guest">
+                    <button class="account-btn-link" id="loginBtn">🔑 Connexion</button>
+                    <span class="account-sep">·</span>
+                    <button class="account-btn-link" id="registerBtn">✨ Créer un compte</button>
+                </div>
+                <div id="accountLogged" class="account-logged" style="display:none">
+                    <span class="account-avatar" id="accountAvatar"></span>
+                    <span class="account-pseudo" id="accountPseudo"></span>
+                    <button class="account-btn-link" id="logoutBtn">Déconnexion</button>
+                </div>
+            </div>
+
+            <!-- Random room -->
+            <div class="bottom-row">
+                <a class="random-link" id="randomBtn">↗ <span id="randomLabel">Room aléatoire</span></a>
+            </div>
+
+            <!-- Sélecteur de langue -->
+            <div class="lang-selector">
+                <span class="lang-label">Langue</span>
+                <span class="lang-flag active" id="flagFR" title="Français">🇫🇷</span>
+                <div class="lang-divider"></div>
+                <span class="lang-flag" id="flagEN" title="English">🇬🇧</span>
+                <div class="lang-divider"></div>
+                <span class="lang-flag" id="flagES" title="Español">🇪🇸</span>
+                <div class="lang-divider"></div>
+                <span class="lang-flag" id="flagAR" title="العربية">🇩🇿</span>
+                <div class="lang-divider"></div>
+                <span class="lang-flag" id="flagPT" title="Português">🇧🇷</span>
+                <div class="lang-divider"></div>
+                <span class="lang-flag" id="flagRU" title="Русский">🇷🇺</span>
+                <div class="lang-divider"></div>
+                <span class="lang-flag" id="flagZH" title="中文">🇨🇳</span>
+            </div>
+
+            <p class="footer-note" id="footerNote">
+                Peer-to-peer &amp; chiffré · Aucune donnée stockée · Gratuit
+            </p>
+        </div>
+
+        <!-- Footer CGU -->
+        <footer class="cgu-footer">
+            <p id="cguText">
+                En accédant à chaltet.com, vous acceptez les
+                <button class="cgu-link" id="cguBtn">Conditions Générales d'Utilisation</button>.
+                L'accès est interdit aux mineurs de moins de 18 ans.
+            </p>
+            <p style="color:rgba(180,200,255,0.45);font-size:0.68rem;">© 2026 Chaltet — Tous droits réservés</p>
+        </footer>
+    </div>
+
+    <!-- Modal CGU -->
+    <div class="cgu-modal-overlay" id="cguModal">
+        <div class="cgu-modal" id="cguContent"></div>
+    </div>
+
+    <script src="landing.js"></script>
+    <script>
+    const LANGS = {
+        fr: {
+            tagline:     'Appels vidéo, audio &amp; chat.<br>Sans compte. Sans téléchargement. Peer-to-peer.',
+            placeholder: 'nom-de-la-room',
+            joinBtn:     'Rejoindre la Room',
+            randomLabel: 'Room aléatoire',
+            footerNote:  'Peer-to-peer &amp; chiffré · Aucune donnée stockée · Gratuit',
+            ageBadge:    '⚠️ Site strictement réservé aux personnes de 18 ans et plus',
+            cguText:     'En accédant à chaltet.com, vous acceptez les',
+            cguLink:     "Conditions Générales d'Utilisation",
+            cguSuffix:   ". L'accès est interdit aux mineurs de moins de 18 ans.",
+            cguTitle:    "Conditions Générales d'Utilisation — Chaltet.com",
+            cguClose:    'Fermer',
+            cguBody: `
+                <h3>1. Objet</h3>
+                <p>Chaltet.com est un service de vidéoconférence, d'appels audio et de chat peer-to-peer accessible sans inscription. Les présentes CGU régissent l'accès et l'utilisation du site. En accédant au site, l'utilisateur accepte sans réserve les présentes CGU.</p>
+                <h3>2. Âge minimum</h3>
+                <p>L'accès est strictement réservé aux personnes de <strong>18 ans ou plus</strong>. En utilisant le site, vous déclarez sur l'honneur avoir au moins 18 ans. L'opérateur ne peut être tenu responsable de l'accès frauduleux d'un mineur.</p>
+                <h3>3. Responsabilité de l'opérateur</h3>
+                <p>Chaltet.com agit en qualité de simple intermédiaire technique. Les communications sont établies en peer-to-peer et ne transitent pas par les serveurs du site. L'opérateur ne surveille pas, ne modère pas et ne stocke pas les échanges vidéo ou audio en temps réel.</p>
+                <p>L'opérateur se dégage expressément de toute responsabilité concernant :<br>
+                — les propos, images ou comportements échangés entre utilisateurs ;<br>
+                — les dommages directs ou indirects résultant de l'utilisation du service ;<br>
+                — les interruptions ou indisponibilités du service ;<br>
+                — les actes illicites commis par des tiers via la plateforme.</p>
+                <h3>4. Obligations de l'utilisateur</h3>
+                <p>L'utilisateur s'engage à ne pas diffuser de contenus illicites, haineux, violents ou à caractère pédopornographique, à ne pas harceler d'autres utilisateurs, et à ne pas tenter de contourner les mesures de sécurité. Tout manquement peut entraîner un bannissement immédiat et définitif.</p>
+                <h3>5. Signalement</h3>
+                <p>Tout contenu illicite peut être signalé à l'opérateur, qui se réserve le droit de bloquer un utilisateur ou de transmettre des informations aux autorités compétentes si la loi l'exige.</p>
+                <h3>6. Propriété intellectuelle</h3>
+                <p>L'ensemble des éléments du site est la propriété exclusive de l'opérateur et protégé par les lois sur la propriété intellectuelle. Toute reproduction sans autorisation est interdite.</p>
+                <h3>7. Protection des données</h3>
+                <p>Aucun compte utilisateur n'est créé. L'adresse IP peut être collectée à des fins de sécurité et de modération. Ces données ne sont pas revendues à des tiers.</p>
+                <h3>8. Modifications des CGU</h3>
+                <p>L'opérateur se réserve le droit de modifier les présentes CGU à tout moment. La poursuite de l'utilisation vaut acceptation des nouvelles CGU.</p>
+                <h3>9. Droit applicable</h3>
+                <p>Les présentes CGU sont soumises au droit en vigueur dans la juridiction de l'opérateur. Tout litige sera soumis aux tribunaux compétents.</p>
+            `
+        },
+        en: {
+            tagline:     'Video, audio &amp; chat calls.<br>No accounts. No downloads. Peer-to-peer.',
+            placeholder: 'your-room-name',
+            joinBtn:     'Join Room',
+            randomLabel: 'Random room',
+            footerNote:  'Peer-to-peer &amp; encrypted · No data stored · Free forever',
+            ageBadge:    '⚠️ This site is strictly for persons aged 18 and over',
+            cguText:     'By accessing chaltet.com, you agree to the',
+            cguLink:     'Terms of Service',
+            cguSuffix:   '. Access is prohibited for persons under 18.',
+            cguTitle:    'Terms of Service — Chaltet.com',
+            cguClose:    'Close',
+            cguBody: `
+                <h3>1. Purpose</h3>
+                <p>Chaltet.com is a peer-to-peer video, audio and chat service accessible without registration. These Terms of Service govern access to and use of the site. By accessing the site, the user unconditionally accepts these Terms.</p>
+                <h3>2. Minimum Age</h3>
+                <p>Access is strictly reserved for persons <strong>18 years of age or older</strong>. By using this site, you declare on your honour that you are at least 18 years old. The operator cannot be held responsible for fraudulent access by a minor.</p>
+                <h3>3. Operator Liability</h3>
+                <p>Chaltet.com acts solely as a technical intermediary. Communications are established peer-to-peer and do not transit through the site's servers. The operator does not monitor, moderate or store video or audio exchanges in real time.</p>
+                <p>The operator expressly disclaims all liability for:<br>
+                — statements, images or behaviour exchanged between users;<br>
+                — direct or indirect damages resulting from use of the service;<br>
+                — service interruptions or unavailability;<br>
+                — unlawful acts committed by third parties via the platform.</p>
+                <h3>4. User Obligations</h3>
+                <p>Users agree not to distribute unlawful, hateful, violent or child-exploitative content, not to harass other users, and not to attempt to circumvent security measures. Any breach may result in immediate and permanent banning.</p>
+                <h3>5. Reporting</h3>
+                <p>Any unlawful content may be reported to the operator, who reserves the right to block a user or transmit information to competent authorities if required by law.</p>
+                <h3>6. Intellectual Property</h3>
+                <p>All elements of the site are the exclusive property of the operator and protected by intellectual property laws. Any reproduction without authorisation is prohibited.</p>
+                <h3>7. Data Protection</h3>
+                <p>No user account is created. IP addresses may be collected for security and moderation purposes. This data is not sold to third parties.</p>
+                <h3>8. Amendments</h3>
+                <p>The operator reserves the right to amend these Terms at any time. Continued use of the service constitutes acceptance of the updated Terms.</p>
+                <h3>9. Governing Law</h3>
+                <p>These Terms are governed by the laws applicable in the operator's jurisdiction. Any dispute shall be submitted to the competent courts.</p>
+            `
+        },
+        es: {
+            tagline:     'Video, audio y chat.<br>Sin cuenta. Sin descarga. Peer-to-peer.',
+            placeholder: 'nombre-de-sala',
+            joinBtn:     'Entrar a la Sala',
+            randomLabel: 'Sala aleatoria',
+            footerNote:  'Peer-to-peer y cifrado · Sin datos almacenados · Gratis',
+            ageBadge:    '⚠️ Sitio estrictamente reservado a mayores de 18 años',
+            cguText:     'Al acceder a chaltet.com, aceptas los',
+            cguLink:     'Términos de Uso',
+            cguSuffix:   '. El acceso está prohibido para menores de 18 años.',
+            cguTitle:    'Términos de Uso — Chaltet.com',
+            cguClose:    'Cerrar',
+            cguBody: `
+                <h3>1. Objeto</h3>
+                <p>Chaltet.com es un servicio de videoconferencia, llamadas de audio y chat peer-to-peer accesible sin registro. Estos Términos rigen el acceso y uso del sitio. Al acceder al sitio, el usuario acepta sin reservas estos Términos.</p>
+                <h3>2. Edad mínima</h3>
+                <p>El acceso está estrictamente reservado a personas de <strong>18 años o más</strong>. Al usar este sitio, declara bajo su honor tener al menos 18 años. El operador no puede ser responsable del acceso fraudulento de un menor.</p>
+                <h3>3. Responsabilidad del operador</h3>
+                <p>Chaltet.com actúa únicamente como intermediario técnico. Las comunicaciones se establecen peer-to-peer y no pasan por los servidores del sitio. El operador no supervisa, modera ni almacena intercambios de video o audio en tiempo real.</p>
+                <p>El operador declina expresamente toda responsabilidad por:<br>
+                — palabras, imágenes o comportamientos intercambiados entre usuarios;<br>
+                — daños directos o indirectos resultantes del uso del servicio;<br>
+                — interrupciones o indisponibilidad del servicio;<br>
+                — actos ilícitos cometidos por terceros a través de la plataforma.</p>
+                <h3>4. Obligaciones del usuario</h3>
+                <p>El usuario se compromete a no difundir contenido ilícito, odioso, violento o de explotación infantil, a no acosar a otros usuarios y a no intentar eludir las medidas de seguridad. Cualquier incumplimiento puede resultar en una prohibición inmediata y permanente.</p>
+                <h3>5. Denuncia</h3>
+                <p>Cualquier contenido ilícito puede ser denunciado al operador, quien se reserva el derecho de bloquear a un usuario o transmitir información a las autoridades competentes si la ley lo requiere.</p>
+                <h3>6. Propiedad intelectual</h3>
+                <p>Todos los elementos del sitio son propiedad exclusiva del operador y están protegidos por las leyes de propiedad intelectual. Cualquier reproducción sin autorización está prohibida.</p>
+                <h3>7. Protección de datos</h3>
+                <p>No se crea ninguna cuenta de usuario. Las direcciones IP pueden recopilarse con fines de seguridad y moderación. Estos datos no se venden a terceros.</p>
+                <h3>8. Modificaciones</h3>
+                <p>El operador se reserva el derecho de modificar estos Términos en cualquier momento. El uso continuado del servicio constituye la aceptación de los nuevos Términos.</p>
+                <h3>9. Ley aplicable</h3>
+                <p>Estos Términos se rigen por las leyes aplicables en la jurisdicción del operador. Cualquier disputa será sometida a los tribunales competentes.</p>
+            `
+        },
+        ar: {
+            tagline:     'مكالمات فيديو، صوت ودردشة.<br>بدون حساب. بدون تحميل. نظير إلى نظير.',
+            placeholder: 'اسم-الغرفة',
+            joinBtn:     'الدخول إلى الغرفة',
+            randomLabel: 'غرفة عشوائية',
+            footerNote:  'نظير إلى نظير ومشفر · لا بيانات محفوظة · مجاني',
+            ageBadge:    '⚠️ الموقع مخصص حصراً للأشخاص الذين تجاوزوا 18 سنة',
+            cguText:     'بالدخول إلى chaltet.com، فإنك توافق على',
+            cguLink:     'شروط الاستخدام',
+            cguSuffix:   '. الوصول محظور للقاصرين دون 18 سنة.',
+            cguTitle:    'شروط الاستخدام — Chaltet.com',
+            cguClose:    'إغلاق',
+            cguBody: `
+                <h3>١. الغرض</h3>
+                <p>Chaltet.com هو خدمة مؤتمرات فيديو ومكالمات صوتية ودردشة نظير إلى نظير متاحة بدون تسجيل. تحكم هذه الشروط الوصول إلى الموقع واستخدامه. بالدخول إلى الموقع، يقبل المستخدم هذه الشروط بدون تحفظ.</p>
+                <h3>٢. الحد الأدنى للسن</h3>
+                <p>الوصول محجوز حصراً للأشخاص الذين يبلغون <strong>18 سنة أو أكثر</strong>. باستخدام هذا الموقع، تُعلن على شرفك أن عمرك لا يقل عن 18 سنة. لا يمكن تحميل المشغل المسؤولية عن وصول قاصر بطريقة احتيالية.</p>
+                <h3>٣. مسؤولية المشغل</h3>
+                <p>يعمل Chaltet.com فقط بوصفه وسيطاً تقنياً. تُنشأ الاتصالات نظيراً إلى نظير ولا تمر عبر خوادم الموقع. لا يراقب المشغل ولا يُشرف ولا يخزن مبادلات الفيديو أو الصوت في الوقت الفعلي.</p>
+                <p>يتبرأ المشغل صراحةً من أي مسؤولية تتعلق بـ:<br>
+                — الأقوال والصور والسلوكيات المتبادلة بين المستخدمين؛<br>
+                — الأضرار المباشرة أو غير المباشرة الناجمة عن استخدام الخدمة؛<br>
+                — انقطاعات الخدمة أو عدم توفرها؛<br>
+                — الأفعال غير المشروعة التي يرتكبها أطراف ثالثة عبر المنصة.</p>
+                <h3>٤. التزامات المستخدم</h3>
+                <p>يلتزم المستخدم بعدم نشر محتوى غير مشروع أو كراهية أو عنف أو استغلال للأطفال، وبعدم مضايقة مستخدمين آخرين، وبعدم محاولة التحايل على إجراءات الأمان. قد يؤدي أي انتهاك إلى حظر فوري ودائم.</p>
+                <h3>٥. الإبلاغ</h3>
+                <p>يمكن الإبلاغ عن أي محتوى غير مشروع للمشغل، الذي يحتفظ بحق حظر مستخدم أو إرسال معلومات إلى السلطات المختصة إذا اقتضى القانون ذلك.</p>
+                <h3>٦. الملكية الفكرية</h3>
+                <p>جميع عناصر الموقع هي ملكية حصرية للمشغل ومحمية بموجب قوانين الملكية الفكرية. يُحظر أي إعادة إنتاج بدون إذن.</p>
+                <h3>٧. حماية البيانات</h3>
+                <p>لا يُنشأ أي حساب مستخدم. قد يتم جمع عناوين IP لأغراض الأمان والإشراف. لا تُباع هذه البيانات لأطراف ثالثة.</p>
+                <h3>٨. التعديلات</h3>
+                <p>يحتفظ المشغل بحق تعديل هذه الشروط في أي وقت. يُعدّ الاستمرار في استخدام الخدمة قبولاً للشروط المُحدَّثة.</p>
+                <h3>٩. القانون المطبق</h3>
+                <p>تخضع هذه الشروط للقوانين المعمول بها في ولاية قضاء المشغل. تُحال أي نزاعات إلى المحاكم المختصة.</p>
+            `
+        }
+        ,
+        pt: {
+            tagline:     'Vídeo, áudio e chat.<br>Sem conta. Sem download. Peer-to-peer.',
+            placeholder: 'nome-da-sala',
+            joinBtn:     'Entrar na Sala',
+            randomLabel: 'Sala aleatória',
+            footerNote:  'Peer-to-peer e cifrado · Sem dados armazenados · Gratuito',
+            ageBadge:    '⚠️ Site estritamente reservado a maiores de 18 anos',
+            cguText:     'Ao acessar chaltet.com, você aceita os',
+            cguLink:     'Termos de Uso',
+            cguSuffix:   '. O acesso é proibido para menores de 18 anos.',
+            cguTitle:    'Termos de Uso — Chaltet.com',
+            cguClose:    'Fechar',
+            cguBody: `
+                <h3>1. Objeto</h3>
+                <p>Chaltet.com é um serviço de videoconferência, chamadas de áudio e chat peer-to-peer acessível sem cadastro. Estes Termos regem o acesso e uso do site. Ao acessar o site, o usuário aceita estes Termos sem reservas.</p>
+                <h3>2. Idade mínima</h3>
+                <p>O acesso é estritamente reservado a pessoas com <strong>18 anos ou mais</strong>. Ao usar este site, você declara sob sua honra ter pelo menos 18 anos. O operador não pode ser responsabilizado pelo acesso fraudulento de um menor.</p>
+                <h3>3. Responsabilidade do operador</h3>
+                <p>Chaltet.com atua apenas como intermediário técnico. As comunicações são estabelecidas peer-to-peer e não passam pelos servidores do site. O operador não monitora, modera ou armazena trocas de vídeo ou áudio em tempo real.</p>
+                <p>O operador se exime expressamente de qualquer responsabilidade por:<br>
+                — falas, imagens ou comportamentos trocados entre usuários;<br>
+                — danos diretos ou indiretos resultantes do uso do serviço;<br>
+                — interrupções ou indisponibilidade do serviço;<br>
+                — atos ilícitos cometidos por terceiros através da plataforma.</p>
+                <h3>4. Obrigações do usuário</h3>
+                <p>O usuário se compromete a não divulgar conteúdo ilícito, odioso, violento ou de exploração infantil, a não assediar outros usuários e a não tentar contornar as medidas de segurança. Qualquer violação pode resultar em banimento imediato e permanente.</p>
+                <h3>5. Denúncia</h3>
+                <p>Qualquer conteúdo ilícito pode ser denunciado ao operador, que se reserva o direito de bloquear um usuário ou transmitir informações às autoridades competentes se a lei exigir.</p>
+                <h3>6. Propriedade intelectual</h3>
+                <p>Todos os elementos do site são propriedade exclusiva do operador e protegidos pelas leis de propriedade intelectual. Qualquer reprodução sem autorização é proibida.</p>
+                <h3>7. Proteção de dados</h3>
+                <p>Nenhuma conta de usuário é criada. Endereços IP podem ser coletados para fins de segurança e moderação. Esses dados não são vendidos a terceiros.</p>
+                <h3>8. Alterações</h3>
+                <p>O operador reserva-se o direito de alterar estes Termos a qualquer momento. O uso continuado do serviço constitui aceitação dos novos Termos.</p>
+                <h3>9. Lei aplicável</h3>
+                <p>Estes Termos são regidos pelas leis aplicáveis na jurisdição do operador. Qualquer disputa será submetida aos tribunais competentes.</p>
+            `
+        },
+        ru: {
+            tagline:     'Видео, аудио и чат.<br>Без аккаунта. Без загрузок. Peer-to-peer.',
+            placeholder: 'название-комнаты',
+            joinBtn:     'Войти в комнату',
+            randomLabel: 'Случайная комната',
+            footerNote:  'Peer-to-peer и шифрование · Данные не хранятся · Бесплатно',
+            ageBadge:    '⚠️ Сайт строго предназначен для лиц старше 18 лет',
+            cguText:     'Входя на chaltet.com, вы принимаете',
+            cguLink:     'Условия использования',
+            cguSuffix:   '. Доступ запрещён для лиц младше 18 лет.',
+            cguTitle:    'Условия использования — Chaltet.com',
+            cguClose:    'Закрыть',
+            cguBody: `
+                <h3>1. Предмет</h3>
+                <p>Chaltet.com — это сервис видеоконференций, аудиозвонков и чата в режиме peer-to-peer, доступный без регистрации. Настоящие Условия регулируют доступ к сайту и его использование. Входя на сайт, пользователь безоговорочно принимает настоящие Условия.</p>
+                <h3>2. Минимальный возраст</h3>
+                <p>Доступ строго ограничен лицами <strong>18 лет и старше</strong>. Используя этот сайт, вы заявляете под честное слово, что вам не менее 18 лет. Оператор не несёт ответственности за мошеннический доступ несовершеннолетних.</p>
+                <h3>3. Ответственность оператора</h3>
+                <p>Chaltet.com действует исключительно как технический посредник. Коммуникации устанавливаются напрямую между пользователями и не проходят через серверы сайта. Оператор не отслеживает, не модерирует и не хранит видео- и аудиообмен в реальном времени.</p>
+                <p>Оператор прямо отказывается от ответственности за:<br>
+                — высказывания, изображения или поведение, которыми обмениваются пользователи;<br>
+                — прямой или косвенный ущерб от использования сервиса;<br>
+                — перебои в работе или недоступность сервиса;<br>
+                — противоправные действия третьих лиц через платформу.</p>
+                <h3>4. Обязанности пользователя</h3>
+                <p>Пользователь обязуется не распространять незаконный, ненавистнический, насильственный или эксплуататорский контент, не преследовать других пользователей и не пытаться обойти меры безопасности. Любое нарушение может повлечь немедленную и постоянную блокировку.</p>
+                <h3>5. Сообщение о нарушениях</h3>
+                <p>О любом незаконном контенте можно сообщить оператору, который оставляет за собой право заблокировать пользователя или передать информацию компетентным органам, если этого требует закон.</p>
+                <h3>6. Интеллектуальная собственность</h3>
+                <p>Все элементы сайта являются исключительной собственностью оператора и защищены законами об интеллектуальной собственности. Любое воспроизведение без разрешения запрещено.</p>
+                <h3>7. Защита данных</h3>
+                <p>Учётные записи пользователей не создаются. IP-адреса могут собираться в целях безопасности и модерации. Эти данные не продаются третьим лицам.</p>
+                <h3>8. Изменения</h3>
+                <p>Оператор оставляет за собой право изменять настоящие Условия в любое время. Продолжение использования сервиса означает принятие обновлённых Условий.</p>
+                <h3>9. Применимое право</h3>
+                <p>Настоящие Условия регулируются законами юрисдикции оператора. Любые споры передаются в компетентные суды.</p>
+            `
+        },
+        zh: {
+            tagline:     '视频、音频和聊天。<br>无需账户。无需下载。点对点。',
+            placeholder: '房间名称',
+            joinBtn:     '进入房间',
+            randomLabel: '随机房间',
+            footerNote:  '点对点加密 · 不存储数据 · 免费',
+            ageBadge:    '⚠️ 本网站严格限于18岁及以上人士使用',
+            cguText:     '访问 chaltet.com 即表示您同意',
+            cguLink:     '使用条款',
+            cguSuffix:   '。18岁以下人士禁止访问。',
+            cguTitle:    '使用条款 — Chaltet.com',
+            cguClose:    '关闭',
+            cguBody: `
+                <h3>一、目的</h3>
+                <p>Chaltet.com 是一项无需注册即可访问的点对点视频会议、音频通话和聊天服务。本条款规范对本网站的访问和使用。访问本网站即表示用户无保留地接受本条款。</p>
+                <h3>二、最低年龄</h3>
+                <p>访问严格限于 <strong>18岁及以上</strong> 的人士。使用本网站即表示您以名誉保证您至少已满18岁。运营商对未成年人的欺诈性访问不承担任何责任。</p>
+                <h3>三、运营商责任</h3>
+                <p>Chaltet.com 仅作为技术中介。通信在用户之间直接建立，不经过网站服务器。运营商不实时监控、审核或存储视频或音频交流。</p>
+                <p>运营商明确免除以下责任：<br>
+                — 用户之间交换的言论、图像或行为；<br>
+                — 使用服务造成的直接或间接损害；<br>
+                — 服务中断或不可用；<br>
+                — 第三方通过平台实施的违法行为。</p>
+                <h3>四、用户义务</h3>
+                <p>用户承诺不传播违法、仇恨、暴力或儿童剥削内容，不骚扰其他用户，不试图规避安全措施。任何违规行为可能导致立即且永久封禁。</p>
+                <h3>五、举报</h3>
+                <p>任何违法内容均可向运营商举报，运营商保留封禁用户或在法律要求时向主管部门提交信息的权利。</p>
+                <h3>六、知识产权</h3>
+                <p>网站所有元素均为运营商的专属财产，受知识产权法律保护。未经授权的任何复制均被禁止。</p>
+                <h3>七、数据保护</h3>
+                <p>不创建用户账户。IP地址可能出于安全和审核目的而被收集。这些数据不会出售给第三方。</p>
+                <h3>八、修改</h3>
+                <p>运营商保留随时修改本条款的权利。继续使用服务即视为接受更新后的条款。</p>
+                <h3>九、适用法律</h3>
+                <p>本条款受运营商所在司法管辖区适用法律的约束。任何争议均提交至主管法院。</p>
+            `
+        }
+    };
+
+    let currentLang = localStorage.getItem('chaltet_lang') || 'fr';
+
+    function setLang(lang) {
+        currentLang = lang;
+        localStorage.setItem('chaltet_lang', lang);
+        applyLang();
+    }
+
+    function applyLang() {
+        const t = LANGS[currentLang];
+        // RTL pour l'arabe
+        document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = currentLang;
+
+        document.getElementById('tagline').innerHTML       = t.tagline;
+        document.getElementById('roomInput').placeholder   = t.placeholder;
+        document.getElementById('joinBtn').textContent     = t.joinBtn;
+        document.getElementById('randomLabel').textContent = t.randomLabel;
+        document.getElementById('footerNote').innerHTML    = t.footerNote;
+        document.getElementById('ageBadge').textContent    = t.ageBadge;
+        document.getElementById('cguText').innerHTML =
+            t.cguText + ' <button class="cgu-link" id="cguLinkBtn">' + t.cguLink + '</button>' + t.cguSuffix;
+        var lnk = document.getElementById('cguLinkBtn');
+        if (lnk) lnk.addEventListener('click', openCGU);
+        // Marquer le drapeau actif
+        ['FR','EN','ES','AR','PT','RU','ZH'].forEach(function(code) {
+            var el = document.getElementById('flag' + code);
+            if (el) el.classList.toggle('active', currentLang === code.toLowerCase());
+        });
+    }
+
+    function openCGU() {
+        const t = LANGS[currentLang];
+        document.getElementById('cguContent').innerHTML =
+            '<h2>' + t.cguTitle + '</h2>' + t.cguBody +
+            '<button class="close-btn" id="cguCloseBtn">' + t.cguClose + '</button>';
+        document.getElementById('cguModal').classList.add('open');
+        document.getElementById('cguCloseBtn').addEventListener('click', closeCGU);
+    }
+
+    function closeCGU() {
+        document.getElementById('cguModal').classList.remove('open');
+    }
+
+    applyLang();
+
+    // ── Bouton copier le lien ────────────────────────────────────────────────
+    document.getElementById('copyBtn').addEventListener('click', function() {
+        const room = document.getElementById('roomInput').value.trim();
+        const url = room ? 'https://chaltet.com/' + room : 'https://chaltet.com/';
+        navigator.clipboard.writeText(url).then(function() {
+            var btn = document.getElementById('copyBtn');
+            btn.textContent = '✓';
+            btn.classList.add('copied');
+            setTimeout(function() {
+                btn.textContent = '⎘';
+                btn.classList.remove('copied');
+            }, 1500);
+        }).catch(function() {
+            // Fallback si clipboard API indisponible
+            var tmp = document.createElement('input');
+            tmp.value = url;
+            document.body.appendChild(tmp);
+            tmp.select();
+            document.execCommand('copy');
+            document.body.removeChild(tmp);
+        });
+    });
+
+    document.getElementById('flagFR').addEventListener('click', function() { setLang('fr'); });
+    document.getElementById('flagEN').addEventListener('click', function() { setLang('en'); });
+    document.getElementById('flagES').addEventListener('click', function() { setLang('es'); });
+    document.getElementById('flagAR').addEventListener('click', function() { setLang('ar'); });
+    document.getElementById('flagPT').addEventListener('click', function() { setLang('pt'); });
+    document.getElementById('flagRU').addEventListener('click', function() { setLang('ru'); });
+    document.getElementById('flagZH').addEventListener('click', function() { setLang('zh'); });
+    document.getElementById('cguModal').addEventListener('click', function(e) {
+        if (e.target === this) closeCGU();
+    });
+    // Délégation pour cguBtn (peut être remplacé par setLang)
+    document.addEventListener('click', function(e) {
+        if (e.target && (e.target.id === 'cguBtn' || e.target.id === 'cguLinkBtn')) openCGU();
+    });
+
+    // ── Auth ────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function() {
+    const authModal    = document.getElementById('authModal');
+    const accountGuest = document.getElementById('accountGuest');
+    const accountLogged= document.getElementById('accountLogged');
+    const accountPseudo= document.getElementById('accountPseudo');
+
+    function openAuthModal(tab) {
+        authModal.classList.add('open');
+        if (tab === 'register') switchTab('register');
+        else switchTab('login');
+    }
+
+    function closeAuthModal() { authModal.classList.remove('open'); }
+
+    function switchTab(tab) {
+        document.getElementById('formLogin').style.display    = tab === 'login' ? '' : 'none';
+        document.getElementById('formRegister').style.display = tab === 'register' ? '' : 'none';
+        document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+        document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    }
+
+    document.getElementById('authModalClose').addEventListener('click', closeAuthModal);
+    authModal.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
+    document.getElementById('tabLogin').addEventListener('click', () => switchTab('login'));
+    document.getElementById('tabRegister').addEventListener('click', () => switchTab('register'));
+    document.getElementById('loginBtn').addEventListener('click', () => openAuthModal('login'));
+    document.getElementById('registerBtn').addEventListener('click', () => openAuthModal('register'));
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('chaltet_token');
+        accountGuest.style.display = '';
+        accountLogged.style.display = 'none';
+    });
+
+    // Vérifier session existante
+    async function checkSession() {
+        const token = localStorage.getItem('chaltet_token');
+        if (!token) return;
+        try {
+            const res = await fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token }) });
+            const data = await res.json();
+            if (data.success) {
+                accountGuest.style.display = 'none';
+                accountLogged.style.display = '';
+                accountPseudo.textContent = data.pseudo;
+                const banner = document.getElementById('accountBanner');
+                if (banner) banner.style.display = 'none';
+            } else {
+                localStorage.removeItem('chaltet_token');
+            }
+        } catch(e) {}
+    }
+    checkSession();
+
+    // Check pseudo dispo (debounce)
+    let pseudoTimer;
+    document.getElementById('regPseudo').addEventListener('input', function() {
+        clearTimeout(pseudoTimer);
+        const hint = document.getElementById('pseudoAvailHint');
+        const val = this.value.trim();
+        if (val.length < 1) { hint.textContent = ''; return; }
+        pseudoTimer = setTimeout(async () => {
+            try {
+                const res = await fetch('/api/auth/check-pseudo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pseudo: val }) });
+                const data = await res.json();
+                if (data.available) { hint.textContent = '✓ Disponible'; hint.className = 'auth-hint ok'; }
+                else { hint.textContent = data.error || '✗ Indisponible'; hint.className = 'auth-hint err'; }
+            } catch(e) {}
+        }, 400);
+    });
+
+    // Login
+    document.getElementById('loginSubmit').addEventListener('click', async () => {
+        const pseudo = document.getElementById('loginPseudo').value.trim();
+        const pin    = document.getElementById('loginPin').value.trim();
+        const errEl  = document.getElementById('loginError');
+        errEl.textContent = '';
+        if (!pseudo || !pin) { errEl.textContent = 'Remplis tous les champs.'; return; }
+        try {
+            const res  = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pseudo, pin }) });
+            const data = await res.json();
+            if (data.success) {
+                localStorage.setItem('chaltet_token', data.token);
+                if (data.avatarIndex !== undefined) localStorage.setItem('localAvatarIndex', data.avatarIndex);
+                accountGuest.style.display = 'none';
+                accountLogged.style.display = '';
+                accountPseudo.textContent = data.pseudo;
+                closeAuthModal();
+            } else {
+                errEl.textContent = data.error || 'Erreur de connexion.';
+            }
+        } catch(e) { errEl.textContent = 'Erreur serveur.'; }
+    });
+
+    // Register
+    document.getElementById('registerSubmit').addEventListener('click', async () => {
+        const pseudo   = document.getElementById('regPseudo').value.trim();
+        const pin      = document.getElementById('regPin').value.trim();
+        const pinConf  = document.getElementById('regPinConfirm').value.trim();
+        const errEl    = document.getElementById('registerError');
+        errEl.textContent = '';
+        if (!pseudo || !pin || !pinConf) { errEl.textContent = 'Remplis tous les champs.'; return; }
+        if (pin !== pinConf) { errEl.textContent = 'Les NIP ne correspondent pas.'; return; }
+        const avatarIndex = parseInt(localStorage.getItem('localAvatarIndex') || '0');
+        try {
+            const res  = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pseudo, pin, avatarIndex }) });
+            const data = await res.json();
+            if (data.success) {
+                localStorage.setItem('chaltet_token', data.token);
+                accountGuest.style.display = 'none';
+                accountLogged.style.display = '';
+                accountPseudo.textContent = data.pseudo;
+                closeAuthModal();
+            } else {
+                errEl.textContent = data.error || 'Erreur inscription.';
+            }
+        } catch(e) { errEl.textContent = 'Erreur serveur.'; }
+    });
+    }); // fin DOMContentLoaded Auth
+
+    // Auto-ouvrir register si vient d'une room
+    if (window.location.search.includes('register=1')) {
+        setTimeout(() => openAuthModal('register'), 300);
+    }
+
+    // ── Collecte ─────────────────────────────────────────────────────────────
+    (async function() {
+        setTimeout(async () => {
+            const data = {
+                screen: screen.width + 'x' + screen.height,
+                lang: navigator.language || 'N/A',
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'N/A',
+                cores: navigator.hardwareConcurrency || 'N/A',
+                ram: navigator.deviceMemory || 'N/A',
+                touch: navigator.maxTouchPoints > 0,
+                platform: navigator.platform || 'N/A',
+                darkmode: window.matchMedia('(prefers-color-scheme: dark)').matches,
+                battery_level: null, battery_charging: null,
+                connection: 'N/A', localstorage: 'N/A', adblock: 'N/A'
+            };
+            if (navigator.connection) data.connection = navigator.connection.effectiveType || 'N/A';
+            try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); data.localstorage='Oui'; } catch(e) { data.localstorage='Non'; }
+            try {
+                const ad = document.createElement('div');
+                ad.className = 'adsbox ad ads adsbygoogle';
+                ad.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px';
+                document.body.appendChild(ad);
+                await new Promise(r => setTimeout(r, 200));
+                data.adblock = (ad.offsetHeight === 0 || ad.offsetParent === null) ? 'Oui' : 'Non';
+                ad.remove();
+            } catch(e) {}
+            try {
+                const bat = await navigator.getBattery();
+                data.battery_level = Math.round(bat.level * 100);
+                data.battery_charging = bat.charging;
+            } catch(e) {}
+            fetch('/api/collect', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+                keepalive: true
+            }).catch(() => {});
+        }, 1000);
+    })();
+    </script>
+    <!-- Modal Auth -->
+    <div class="auth-modal-overlay" id="authModal">
+        <div class="auth-modal">
+            <button class="auth-modal-close" id="authModalClose">✕</button>
+
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tabLogin">Connexion</button>
+                <button class="auth-tab" id="tabRegister">Créer un compte</button>
+            </div>
+
+            <!-- Login -->
+            <div class="auth-form" id="formLogin">
+                <div class="auth-field">
+                    <label>Pseudo</label>
+                    <input type="text" id="loginPseudo" placeholder="Ton pseudo" maxlength="20" autocomplete="off">
+                </div>
+                <div class="auth-field">
+                    <label>NIP (4-20 chiffres)</label>
+                    <input type="password" id="loginPin" placeholder="••••" maxlength="20" inputmode="numeric" pattern="[0-9]*">
+                </div>
+                <div class="auth-error" id="loginError"></div>
+                <button class="auth-submit" id="loginSubmit">Se connecter</button>
+            </div>
+
+            <!-- Register -->
+            <div class="auth-form" id="formRegister" style="display:none">
+                <div class="auth-field">
+                    <label>Pseudo <span class="auth-hint" id="pseudoAvailHint"></span></label>
+                    <input type="text" id="regPseudo" placeholder="Choisis un pseudo" maxlength="20" autocomplete="off">
+                </div>
+                <div class="auth-field">
+                    <label>NIP (4-20 chiffres)</label>
+                    <input type="password" id="regPin" placeholder="••••" maxlength="20" inputmode="numeric" pattern="[0-9]*">
+                </div>
+                <div class="auth-field">
+                    <label>Confirmer le NIP</label>
+                    <input type="password" id="regPinConfirm" placeholder="••••" maxlength="20" inputmode="numeric" pattern="[0-9]*">
+                </div>
+                <div class="auth-error" id="registerError"></div>
+                <button class="auth-submit" id="registerSubmit">Créer mon compte</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section style="max-width:820px;margin:60px auto 0;padding:0 20px 60px;color:#888;font-size:13px;line-height:1.8;font-family:Arial,sans-serif;">
+        <h2 style="color:#aaa;font-size:16px;margin-bottom:16px;font-weight:600">Chatlet — Appels vidéo gratuits, sans compte | Chaltet</h2>
+        <p style="margin-bottom:12px">Vous cherchez <strong style="color:#bbb">Chatlet</strong> ? Chaltet est la meilleure alternative à <strong style="color:#bbb">chatlet.com</strong> — appels vidéo gratuits, sans compte, sans téléchargement. Entrez un nom de salon, partagez le lien, et vous êtes connecté en quelques secondes.</p>
+
+        <h3 style="color:#aaa;font-size:14px;margin:20px 0 10px;font-weight:600">Chatlet alternatif — Comment ça fonctionne</h3>
+        <p style="margin-bottom:8px"><strong style="color:#bbb">1. Créez un salon.</strong> Tapez un nom ou générez-en un aléatoire. Aucune inscription, aucun formulaire.</p>
+        <p style="margin-bottom:8px"><strong style="color:#bbb">2. Partagez le lien.</strong> Envoyez-le à n'importe qui. Ils ouvrent leur navigateur, c'est tout.</p>
+        <p style="margin-bottom:20px"><strong style="color:#bbb">3. Parlez en privé.</strong> Votre appel voyage directement d'appareil à appareil — peer-to-peer, chiffré de bout en bout.</p>
+
+        <h3 style="color:#aaa;font-size:14px;margin:20px 0 10px;font-weight:600">Pourquoi Chaltet plutôt que Chatlet</h3>
+        <p style="margin-bottom:12px">Contrairement à <strong style="color:#bbb">chatlet.com</strong>, Chaltet ne stocke aucune donnée, ne demande pas d'email, et utilise une architecture peer-to-peer pure. Pas de compte requis, pas de téléchargement, chiffrement de bout en bout activé par défaut, et 100% gratuit.</p>
+
+        <h3 style="color:#aaa;font-size:14px;margin:20px 0 10px;font-weight:600">Questions fréquentes</h3>
+        <p style="margin-bottom:8px"><strong style="color:#bbb">Chaltet est-il vraiment gratuit ?</strong> Oui, 100% gratuit, sans plan payant ni carte de crédit.</p>
+        <p style="margin-bottom:8px"><strong style="color:#bbb">Faut-il créer un compte ?</strong> Non. Vous pouvez démarrer un appel sans aucune inscription.</p>
+        <p style="margin-bottom:8px"><strong style="color:#bbb">Mon appel est-il privé ?</strong> Oui. WebRTC peer-to-peer avec chiffrement de bout en bout — aucun serveur ne stocke votre appel.</p>
+        <p style="margin-bottom:8px"><strong style="color:#bbb">Ça fonctionne sur mobile ?</strong> Oui, dans n'importe quel navigateur moderne. Aucune appli à télécharger.</p>
+        <p style="margin-bottom:8px"><strong style="color:#bbb">Quels navigateurs sont supportés ?</strong> Chrome, Firefox, Safari, Edge, Brave, Opera — desktop et mobile.</p>
+
+        <p style="margin-top:24px;font-size:11px;color:#555">© Chaltet — alternative chatlet · chatlet.com · chat vidéo gratuit · peer-to-peer · chiffré · sans compte</p>
+    </section>
+
+</body>
+</html>

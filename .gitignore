@@ -1,0 +1,26 @@
+node_modules/
+.env
+.DS_Store
+Thumbs.db
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Data files (ephemeral on Render)
+notes.json
+extras.json
+display.txt
+.env
+server.js.bak
+public/avatars/
+public/backgrounds-mha/
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.mp3
+*.bak
+*.bak2
+sauvegarde.tar.gz
